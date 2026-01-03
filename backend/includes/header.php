@@ -1,0 +1,34 @@
+<?php
+/**
+ * PSM System - Common Header
+ * Includes Bootstrap 5, Font Awesome, Google Fonts, and Custom CSS
+ */
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Define base path
+define('BASE_URL', '/psm_system');
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PSM System - Mother and Baby Health Management">
+    <title><?php echo $page_title ?? 'PSM System'; ?></title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/frontend/assets/css/style.css">
+</head>
+<body>
