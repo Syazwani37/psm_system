@@ -5,9 +5,9 @@
  */
 
 $page_title = "Nutrition Adherence - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/auth_check.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
 requireLogin('admin');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
 ?>
 
 <style>
@@ -152,5 +152,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/header.php';
     </div>
 </div>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/footer.php'; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+
 

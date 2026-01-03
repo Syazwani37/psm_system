@@ -5,9 +5,9 @@
  */
 
 $page_title = "Manage Consultations - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/auth_check.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
 requireLogin('professional');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
 ?>
 
 <style>
@@ -269,5 +269,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/header.php';
     }
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/footer.php'; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+
 

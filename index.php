@@ -4,6 +4,7 @@
  * Redirects to login page
  */
 
-header("Location: /frontend/views/auth/login.php");
+header("Location: /psm_system/frontend/views/auth/login.php");
 exit();
 ?>
+
