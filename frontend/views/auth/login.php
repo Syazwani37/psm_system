@@ -5,10 +5,10 @@
  */
 
 $page_title = "Login - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/helpers/functions.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/helpers/functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/auth_check.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/header.php';
 
 $error = '';
 
@@ -181,4 +181,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/footer.php'; ?>
+

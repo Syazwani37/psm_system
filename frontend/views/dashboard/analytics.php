@@ -5,8 +5,8 @@
  */
 
 $page_title = "Analytics - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/auth_check.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
 
 requireLogin('professional');
 
@@ -24,7 +24,7 @@ while ($row = mysqli_fetch_assoc($result_counts)) {
     if ($row['result_status'] == 'danger') $danger_count = $row['count'];
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/header.php';
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -152,4 +152,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
     });
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/footer.php'; ?>
+

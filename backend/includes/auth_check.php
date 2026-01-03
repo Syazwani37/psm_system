@@ -14,7 +14,7 @@ if (session_status() == PHP_SESSION_NONE) {
  */
 function requireLogin($required_role = null) {
     if (!isset($_SESSION['user_id'])) {
-        header("Location: /psm_system/frontend/views/auth/login.php");
+        header("Location: /frontend/views/auth/login.php");
         exit();
     }
     
@@ -30,7 +30,7 @@ function requireLogin($required_role = null) {
  * @param string $role - User role
  */
 function redirectToDashboard($role) {
-    $base = '/psm_system/frontend/views/dashboard/';
+    $base = '/frontend/views/dashboard/';
     
     switch ($role) {
         case 'mother':
@@ -43,7 +43,7 @@ function redirectToDashboard($role) {
             header("Location: {$base}admin.php");
             break;
         default:
-            header("Location: /psm_system/frontend/views/auth/login.php");
+            header("Location: /frontend/views/auth/login.php");
     }
     exit();
 }
@@ -80,3 +80,4 @@ function getUserId() {
     return $_SESSION['user_id'] ?? null;
 }
 ?>
+

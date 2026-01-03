@@ -5,9 +5,9 @@
  */
 
 $page_title = "Mom's Journal - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/helpers/functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/auth_check.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/helpers/functions.php';
 
 requireLogin('mother');
 
@@ -53,7 +53,7 @@ foreach($entries as $e) {
 arsort($mood_counts);
 $dominant_mood = !empty($mood_counts) ? array_key_first($mood_counts) : null;
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/header.php';
 ?>
 
 <style>
@@ -242,4 +242,5 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 
 </div>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/includes/footer.php'; ?>
+

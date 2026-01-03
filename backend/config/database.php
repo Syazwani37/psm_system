@@ -4,11 +4,11 @@
  * Backend Configuration File
  */
 
-$host = 'localhost';
-$user = 'root';
-$password = ''; // Default Laragon password is empty
-$database = 'psm_system';
-$port = 3306;
+$host = getenv('MYSQLHOST') ?: 'localhost';
+$user = getenv('MYSQLUSER') ?: 'root';
+$password = getenv('MYSQLPASSWORD') ?: ''; // Default Laragon password is empty
+$database = getenv('MYSQLDATABASE') ?: 'psm_system';
+$port = getenv('MYSQLPORT') ?: 3306;
 
 // Create connection
 $conn = mysqli_connect($host, $user, $password, $database, $port);
