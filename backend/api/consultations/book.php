@@ -5,8 +5,8 @@
  */
 
 header('Content-Type: application/json');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/helpers/functions.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../helpers/functions.php';
 
 // Check if user is logged in
 session_start();
@@ -23,19 +23,23 @@ if (!$data || !isset($data['professional_id']) || !isset($data['scheduled_at']))
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
-$professional_id = (int)$data['professional_id'];
-$scheduled_at = mysqli_real_escape_string($conn, $data['scheduled_at']);
-$reason = mysqli_real_escape_string($conn, $data['reason'] ?? 'Routine Checkup');
-$status = 'pending';
+try {
+    $user_id = $_SESSION['user_id'];
+    $professional_id = (int)$data['professional_id'];
+    $scheduled_at = mysqli_real_escape_string($conn, $data['scheduled_at']);
+    $reason = mysqli_real_escape_string($conn, $data['reason'] ?? 'Routine Checkup');
+    $status = 'pending';
 
-// Insert into database
-$sql = "INSERT INTO consultations (user_id, professional_id, scheduled_at, reason, status) 
-        VALUES ($user_id, $professional_id, '$scheduled_at', '$reason', '$status')";
+    // Insert into database
+    $sql = "INSERT INTO consultations (user_id, professional_id, scheduled_at, reason, status) 
+            VALUES ($user_id, $professional_id, '$scheduled_at', '$reason', '$status')";
 
-if (mysqli_query($conn, $sql)) {
-    echo json_encode(['success' => true, 'message' => 'Booking request sent!']);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . mysqli_error($conn)]);
+    if (mysqli_query($conn, $sql)) {
+        echo json_encode(['success' => true, 'message' => 'Booking request sent!']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Database error']);
+    }
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'System error: ' . $e->getMessage()]);
 }
 ?>

@@ -5,7 +5,7 @@
  */
 
 header('Content-Type: application/json');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'professional') {
@@ -13,24 +13,28 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'professional') {
     exit;
 }
 
-$professional_id = $_SESSION['user_id'];
+try {
+    $professional_id = $_SESSION['user_id'];
 
-// Fetch consultations with patient name
-$sql = "SELECT c.*, u.name as patient_name 
-        FROM consultations c 
-        JOIN users u ON c.user_id = u.id 
-        WHERE c.professional_id = $professional_id 
-        ORDER BY c.scheduled_at ASC";
+    // Fetch consultations with patient name
+    $sql = "SELECT c.*, u.name as patient_name 
+            FROM consultations c 
+            JOIN users u ON c.user_id = u.id 
+            WHERE c.professional_id = $professional_id 
+            ORDER BY c.scheduled_at ASC";
 
-$result = mysqli_query($conn, $sql);
-$bookings = [];
+    $result = mysqli_query($conn, $sql);
+    $bookings = [];
 
-if ($result) {
-    while ($row = mysqli_fetch_assoc($result)) {
-        $bookings[] = $row;
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $bookings[] = $row;
+        }
+        echo json_encode(['success' => true, 'bookings' => $bookings]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Query failed']);
     }
-    echo json_encode(['success' => true, 'bookings' => $bookings]);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . mysqli_error($conn)]);
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'System error: ' . $e->getMessage()]);
 }
 ?>

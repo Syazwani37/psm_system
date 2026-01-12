@@ -5,7 +5,7 @@
  */
 
 header('Content-Type: application/json');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once __DIR__ . '/../../config/database.php';
 
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'professional') {
@@ -20,24 +20,28 @@ if (!$data || !isset($data['consultation_id']) || !isset($data['status'])) {
     exit;
 }
 
-$consultation_id = (int)$data['consultation_id'];
-$status = mysqli_real_escape_string($conn, $data['status']);
-$professional_id = $_SESSION['user_id'];
+try {
+    $consultation_id = (int)$data['consultation_id'];
+    $status = mysqli_real_escape_string($conn, $data['status']);
+    $professional_id = $_SESSION['user_id'];
 
-// Initial SQL
-$sql = "UPDATE consultations SET status = '$status'";
+    // Initial SQL
+    $sql = "UPDATE consultations SET status = '$status'";
 
-// If rescheduling, update scheduled_at
-if (isset($data['scheduled_at'])) {
-    $scheduled_at = mysqli_real_escape_string($conn, $data['scheduled_at']);
-    $sql .= ", scheduled_at = '$scheduled_at'";
-}
+    // If rescheduling, update scheduled_at
+    if (isset($data['scheduled_at'])) {
+        $scheduled_at = mysqli_real_escape_string($conn, $data['scheduled_at']);
+        $sql .= ", scheduled_at = '$scheduled_at'";
+    }
 
-$sql .= " WHERE id = $consultation_id AND professional_id = $professional_id";
+    $sql .= " WHERE id = $consultation_id AND professional_id = $professional_id";
 
-if (mysqli_query($conn, $sql)) {
-    echo json_encode(['success' => true, 'message' => 'Consultation updated successfully']);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . mysqli_error($conn)]);
+    if (mysqli_query($conn, $sql)) {
+        echo json_encode(['success' => true, 'message' => 'Consultation updated successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Update failed']);
+    }
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'System error: ' . $e->getMessage()]);
 }
 ?>
