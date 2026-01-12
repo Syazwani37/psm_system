@@ -4,17 +4,20 @@
  * Backend Configuration File
  */
 
-// Database Configuration
-$host = getenv('MYSQLHOST');
-$user = getenv('MYSQLUSER');
-$password = getenv('MYSQLPASSWORD');
-$database = getenv('MYSQLDATABASE');
-$port = getenv('MYSQLPORT') ?: 3306;
+// Database Configuration - Try multiple naming conventions used by Railway
+$host = getenv('MYSQLHOST') ?: getenv('MYSQL_HOST') ?: getenv('DATABASE_HOST');
+$user = getenv('MYSQLUSER') ?: getenv('MYSQL_USER') ?: getenv('DATABASE_USER');
+$password = getenv('MYSQLPASSWORD') ?: getenv('MYSQL_PASSWORD') ?: getenv('DATABASE_PASSWORD');
+$database = getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE') ?: getenv('DATABASE_NAME');
+$port = getenv('MYSQLPORT') ?: getenv('MYSQL_PORT') ?: 3306;
 
-// If we are on Railway but variables are missing
-if (!$host && getenv('RAILWAY_ENVIRONMENT')) {
-    die("❌ Error: Railway environment detected but MYSQLHOST is missing.");
+// If we are on Railway but variables are still missing
+if (getenv('RAILWAY_ENVIRONMENT') && !$host) {
+    // List available ENVs (safe ones only) to help debug
+    $available_envs = array_keys(getenv());
+    die("❌ Error: Railway detected but DB variables missing. Found ENVs: " . implode(', ', array_filter($available_envs, fn($k) => strpos($k, 'MYSQL') === false)));
 }
+
 
 // Defaults for local Laragon
 $host = $host ?: '127.0.0.1';
