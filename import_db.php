@@ -1,9 +1,8 @@
 <?php
-require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 /**
- * PSM System - Database Importer (V2)
+ * PSM System - Database Importer (V3)
  */
-require_once dirname(__FILE__, 1) . '/backend/config/database.php';
+require_once __DIR__ . '/backend/config/database.php';
 
 echo "<h2>PSM System - Database Importer</h2>";
 
@@ -41,11 +40,13 @@ if (mysqli_multi_query($conn, $sql)) {
         $insertUsers = "
             INSERT INTO users (name, email, password, role) VALUES 
             ('Test Mother', 'mother@example.com', 'password123', 'mother'),
-            ('Test Professional', 'pro@example.com', 'password123', 'professional'),
+            ('Dr. Hanan', 'hanan@example.com', 'password123', 'professional'),
+            ('Dr. Izzah', 'izzah@example.com', 'password123', 'professional'),
+            ('Dr. Fara', 'fara@example.com', 'password123', 'professional'),
             ('Test Admin', 'admin@example.com', 'password123', 'admin');
         ";
         if (mysqli_query($conn, $insertUsers)) {
-            echo "<p style='color: blue;'>✅ Test users created: mother@example.com, pro@example.com (password123)</p>";
+            echo "<p style='color: blue;'>✅ Test users created: Dr. Hanan, Dr. Izzah, and Dr. Fara are ready.</p>";
         }
     }
 
