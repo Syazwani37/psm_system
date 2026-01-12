@@ -5,7 +5,7 @@
  */
 
 header('Content-Type: application/json');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
 
 session_start();
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'professional') {

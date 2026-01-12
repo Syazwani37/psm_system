@@ -5,8 +5,8 @@
  */
 
 header('Content-Type: application/json');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/helpers/functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/helpers/functions.php';
 
 // Check if user is logged in
 session_start();
