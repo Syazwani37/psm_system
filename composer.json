@@ -1,0 +1,8 @@
+{
+    "name": "syazwani37/psm_system",
+    "description": "DSS Recovery Guide for Mom & Baby",
+    "type": "project",
+    "require": {
+        "php": ">=8.0"
+    }
+}

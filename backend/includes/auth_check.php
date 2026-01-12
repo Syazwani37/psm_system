@@ -8,13 +8,16 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+// Ensure database configuration is loaded for BASE_URL
+require_once dirname(__DIR__) . '/config/database.php';
+
 /**
  * Check if user is logged in
  * @param string|null $required_role - Optional role requirement ('mother', 'professional', 'admin')
  */
 function requireLogin($required_role = null) {
     if (!isset($_SESSION['user_id'])) {
-        header("Location: /psm_system/frontend/views/auth/login.php");
+        header("Location: " . BASE_URL . "/frontend/views/auth/login.php");
         exit();
     }
     
@@ -30,7 +33,7 @@ function requireLogin($required_role = null) {
  * @param string $role - User role
  */
 function redirectToDashboard($role) {
-    $base = '/psm_system/frontend/views/dashboard/';
+    $base = BASE_URL . '/frontend/views/dashboard/';
     
     switch ($role) {
         case 'mother':
@@ -43,10 +46,11 @@ function redirectToDashboard($role) {
             header("Location: {$base}admin.php");
             break;
         default:
-            header("Location: /psm_system/frontend/views/auth/login.php");
+            header("Location: " . BASE_URL . "/frontend/views/auth/login.php");
     }
     exit();
 }
+
 
 /**
  * Check if user is logged in (returns boolean)

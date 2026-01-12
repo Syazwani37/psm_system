@@ -5,9 +5,10 @@
  */
 
 $page_title = "User Engagement - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/config/database.php';
 requireLogin('admin');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 ?>
 
 <style>
@@ -64,35 +65,57 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 <div class="blob blob-1" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); top: -150px; left: -150px; opacity: 0.1;"></div>
 
 <div class="page-container">
-    <div class="text-center mb-5">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/admin.php" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    <div class="d-flex align-items-center mb-5">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+            <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="mb-2" style="font-family: 'Playfair Display', serif; background: linear-gradient(to right, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-            User Engagement Report
-        </h1>
+        <div>
+            <h1 class="mb-0" style="font-family: 'Playfair Display', serif; background: linear-gradient(to right, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                User Engagement Report
+            </h1>
+            <p class="text-muted mb-0">Analysis of user activities and participation.</p>
+        </div>
     </div>
 
     <!-- Report Content -->
     <div class="report-card">
         <div>
+            <?php
+            // Fetch real user stats
+            $users_res = mysqli_query($conn, "SELECT role, COUNT(*) as c FROM users GROUP BY role");
+            $roles = [];
+            $total_users = 0;
+            while($row = mysqli_fetch_assoc($users_res)) {
+                $roles[$row['role']] = $row['c'];
+                $total_users += $row['c'];
+            }
+            
+            $mothers = $roles['mother'] ?? 0;
+            $profs = $roles['professional'] ?? 0;
+            $admins = $roles['admin'] ?? 0;
+
+            // Activity estimation (proxy via logs)
+            $log_res = mysqli_query($conn, "SELECT COUNT(*) as c, MAX(created_at) as last_act FROM symptom_logs");
+            $log_data = mysqli_fetch_assoc($log_res);
+            $total_logs = $log_data['c'];
+            $last_active = $log_data['last_act'] ? date('l', strtotime($log_data['last_act'])) : 'None';
+            ?>
+
             <div class="section-title">🔍 Overview</div>
-            <p class="mt-2 text-muted">This report outlines how users are interacting with the PSM System platform.</p>
+            <p class="mt-2 text-muted">This report outlines how users are interacting with the PSM System platform based on real-time database records.</p>
 
             <div class="section-title">📊 Key Metrics</div>
             <ul class="list-group list-group-flush mt-2">
-                <li class="list-group-item"><i class="fas fa-users me-2 text-primary"></i> <strong>Total Users:</strong> 1,240 (1,000 Mothers, 200 Professionals, 10 Admins)</li>
-                <li class="list-group-item"><i class="fas fa-calendar-day me-2 text-success"></i> <strong>Daily Active Users:</strong> Average 420 users per day</li>
-                <li class="list-group-item"><i class="fas fa-star me-2 text-warning"></i> <strong>Most Used Feature:</strong> Recovery Tracker — used by 87% of mothers</li>
-                <li class="list-group-item"><i class="fas fa-user-clock me-2 text-secondary"></i> <strong>Least Engaged Role:</strong> Admins — only 3 active monthly</li>
-                <li class="list-group-item"><i class="fas fa-calendar-alt me-2 text-info"></i> <strong>Top Day of Activity:</strong> Wednesday (22% of weekly logins)</li>
+                <li class="list-group-item"><i class="fas fa-users me-2 text-primary"></i> <strong>Total Users:</strong> <?php echo $total_users; ?> (<?php echo $mothers; ?> Mothers, <?php echo $profs; ?> Professionals, <?php echo $admins; ?> Admins)</li>
+                <li class="list-group-item"><i class="fas fa-file-medical me-2 text-success"></i> <strong>Total Symptom Logs:</strong> <?php echo $total_logs; ?> entries recorded</li>
+                <li class="list-group-item"><i class="fas fa-star me-2 text-warning"></i> <strong>Most Used Feature:</strong> Symptom Logging</li>
+                <li class="list-group-item"><i class="fas fa-calendar-alt me-2 text-info"></i> <strong>Last Active Day:</strong> <?php echo $last_active; ?></li>
             </ul>
 
             <div class="section-title">💡 Insights & Recommendations</div>
             <ul class="list-group list-group-flush mt-2">
-                <li class="list-group-item"><i class="fas fa-check me-2 text-success"></i> Send monthly summaries and reminders to admins</li>
-                <li class="list-group-item"><i class="fas fa-check me-2 text-success"></i> Enhance tracker notifications for mothers</li>
-                <li class="list-group-item"><i class="fas fa-check me-2 text-success"></i> Encourage healthcare professional–mother follow-ups</li>
+                <li class="list-group-item"><i class="fas fa-check me-2 text-success"></i> <strong>User Base:</strong> <?php echo ($mothers > $profs) ? 'Strong mother participation' : 'Balanced ecosystem'; ?></li>
+                <li class="list-group-item"><i class="fas fa-check me-2 text-success"></i> <strong>Data Growth:</strong> <?php echo ($total_logs > 10) ? 'Healthy data accumulation' : 'Encourage more logging'; ?></li>
                 <li class="list-group-item"><i class="fas fa-check me-2 text-success"></i> Highlight new resources in the Resource Library</li>
             </ul>
         </div>
@@ -105,6 +128,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
     </div>
 </div>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

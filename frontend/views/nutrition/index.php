@@ -5,9 +5,9 @@
  */
 
 $page_title = "Nutrition & Exercise Plans - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
 requireLogin('mother');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 ?>
 
 <style>
@@ -169,14 +169,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 <div class="blob blob-1" style="top: -150px; left: -150px; opacity: 0.4;"></div>
 
 <div class="page-container">
-    <div class="text-center mb-5">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/mother.php" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    <div class="d-flex align-items-center mb-5">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+            <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="mb-2" style="font-family: 'Playfair Display', serif; color: #4A5D53;">
-            <i class="fas fa-apple-alt me-2" style="color: #B4C5BD;"></i> Nutrition & Exercise Plans
-        </h1>
-        <p class="text-muted">Nourish your body and strengthen your recovery.</p>
+        <div>
+            <h1 class="mb-0" style="font-family: 'Playfair Display', serif; color: #4A5D53;">
+                <i class="fas fa-apple-alt me-2" style="color: #B4C5BD;"></i> Nutrition & Exercise Plans
+            </h1>
+            <p class="text-muted mb-0">Nourish your body and regain strength.</p>
+        </div>
     </div>
 
     <div class="plan-grid">
@@ -331,6 +333,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
     }
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

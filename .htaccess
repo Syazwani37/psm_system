@@ -1,16 +1,11 @@
 RewriteEngine On
-RewriteBase /psm_system/
+# RewriteBase removed for environment flexibility
+# Rules are relative to the directory containing this file
 
 # 1. Catch the cached legacy paths and redirect to the NEW modular system
-# This is for users whose browsers still remember the old folder structure
 RewriteRule ^auth/login\.html$ frontend/views/auth/login.php [L,R=301]
 RewriteRule ^auth/login\.php$ frontend/views/auth/login.php [L,R=301]
 RewriteRule ^index\.html$ frontend/views/auth/login.php [L,R=301]
 
 # 2. Main Entry Point Redirect
-# This ensures that http://localhost/psm_system/ always goes to the right place
-# (Already handled by index.php, but this is an extra layer of security)
 DirectoryIndex index.php
-
-# Note: The 'auth/' folder does NOT exist anymore. 
-# These rules are here to catch old bookmarks and browser cache.

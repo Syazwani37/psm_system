@@ -5,9 +5,9 @@
  */
 
 $page_title = "Symptom Checker - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/helpers/functions.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/config/database.php';
+require_once BASE_PATH . '/backend/helpers/functions.php';
 
 // Check login (Mother only)
 requireLogin('mother');
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 ?>
 
 <style>
@@ -134,16 +134,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 <div class="zen-wrapper">
     <div class="zen-card">
         <!-- Back Button -->
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/mother.php" class="btn btn-outline-secondary btn-sm mb-4">
-            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
-        </a>
-
-        <div class="zen-header">
-            <div class="zen-icon">
-                <i class="fas fa-seedling"></i>
+        <div class="d-flex align-items-center mb-4">
+            <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <h1 class="mb-0" style="font-family: 'Playfair Display', serif; color: #4A5D53;">Symptom Checker</h1>
+                <p class="text-muted mb-0">Answer a few questions to check your recovery status.</p>
             </div>
-            <h1 class="mb-2" style="font-family: 'Playfair Display', serif; color: #4A5D53;">Symptom Checker</h1>
-            <p class="text-muted">Answer a few questions to check your recovery status.</p>
         </div>
 
         <?php displayFlashMessage(); ?>
@@ -269,6 +267,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 <?php endif; ?>
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

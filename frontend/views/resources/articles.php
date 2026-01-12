@@ -5,9 +5,10 @@
  */
 
 $page_title = "Expert Articles & Tips - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/config/database.php';
 requireLogin(); // Accessible to all logged in users (Mother/Professional/Admin)
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 ?>
 
 <style>
@@ -88,17 +89,47 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 <div class="blob blob-2" style="top: -100px; right: -100px; opacity: 0.4;"></div>
 
 <div class="page-container">
-    <div class="text-center mb-5">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/mother.php" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    <div class="d-flex align-items-center mb-5">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+            <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="mb-2" style="font-family: 'Playfair Display', serif; color: #4A5D53;">
-            <i class="fas fa-book-reader me-2" style="color: #B4C5BD;"></i> Expert Insights
-        </h1>
-        <p class="text-muted">Evidence-based advice for your recovery and well-being.</p>
+        <div>
+            <h1 class="mb-0" style="font-family: 'Playfair Display', serif; color: #4A5D53;">
+                <i class="fas fa-book-reader me-2" style="color: #B4C5BD;"></i> Expert Insights & Community
+            </h1>
+            <p class="text-muted mb-0">Curated articles and local resources for you.</p>
+        </div>
     </div>
 
     <div class="articles-grid">
+        <!-- Dynamic Uploaded Resources -->
+        <?php
+        // Fetch resources (Exclude videos)
+        $resQuery = "SELECT * FROM resources WHERE file_path NOT LIKE '%.mp4' AND file_path NOT LIKE '%.avi' AND file_path NOT LIKE '%.mov' ORDER BY created_at DESC";
+        $resResult = mysqli_query($conn, $resQuery);
+
+        if ($resResult && mysqli_num_rows($resResult) > 0) {
+            while ($row = mysqli_fetch_assoc($resResult)) {
+                $fileExt = pathinfo($row['file_path'], PATHINFO_EXTENSION);
+                $icon = 'fa-file-alt'; // Default doc
+                if (in_array($fileExt, ['pdf'])) { $icon = 'fa-file-pdf'; }
+                
+                // Construct download link
+                $link = BASE_URL . $row['file_path'];
+                ?>
+                <div class="article-card" onclick="window.open('<?php echo $link; ?>', '_blank')">
+                    <div class="article-icon"><i class="fas <?php echo $icon; ?>"></i></div>
+                    <div class="article-content">
+                        <h3><?php echo escape($row['title']); ?></h3>
+                        <p><?php echo escape($row['description']); ?></p>
+                        <div class="read-more">View Resource <i class="fas fa-external-link-alt"></i></div>
+                    </div>
+                </div>
+                <?php
+            }
+        }
+        ?>
+
         <!-- Article Card 1 -->
         <div class="article-card" onclick="openExternalLink('https://www.nhs.uk/mental-health/conditions/post-natal-depression/symptoms/')">
             <div class="article-icon"><i class="fas fa-brain"></i></div>
@@ -128,11 +159,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
                 <div class="read-more">Read on Raising Children <i class="fas fa-external-link-alt"></i></div>
             </div>
         </div>
-    </div>
 
-    <h2 class="mt-5 mb-4 text-center" style="font-family: 'Playfair Display', serif; color: #4A5D53;">Local Support & Community</h2>
-    
-    <div class="articles-grid">
         <!-- IBU Family Resource Group -->
         <div class="article-card" onclick="openExternalLink('https://www.ibufamily.org/')">
             <div class="article-icon" style="background: #E8F5E9; color: #2E7D32;"><i class="fas fa-hands-helping"></i></div>
@@ -161,6 +188,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
     }
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

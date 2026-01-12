@@ -4,7 +4,10 @@
  * Redirects to login page
  */
 
-header("Location: /psm_system/frontend/views/auth/login.php");
+require_once 'backend/config/database.php';
+
+header("Location: " . BASE_URL . "/frontend/views/auth/login.php");
 exit();
 ?>
+
 

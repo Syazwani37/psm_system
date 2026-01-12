@@ -5,9 +5,10 @@
  */
 
 $page_title = "Recovery Trends - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/config/database.php';
 requireLogin('admin');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 ?>
 
 <style>
@@ -83,31 +84,66 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 <div class="blob blob-1" style="background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%); top: -150px; right: -150px; width: 400px; height: 400px; opacity: 0.5;"></div>
 
 <div class="page-container">
-    <div class="text-center mb-5">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/admin.php" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    <div class="d-flex align-items-center mb-5">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+            <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="mb-2" style="font-family: 'Playfair Display', serif; color: #4A148C;">
-            <i class="fas fa-chart-line me-2" style="color: #BA68C8;"></i> Recovery Trends
-        </h1>
-        <p class="text-muted">Postpartum recovery progress statistics for this month.</p>
+        <div>
+            <h1 class="mb-0" style="font-family: 'Playfair Display', serif; color: #4A148C;">
+                <i class="fas fa-chart-line me-2" style="color: #BA68C8;"></i> Recovery Trends
+            </h1>
+            <p class="text-muted mb-0">Visualizing recovery progress across all patients.</p>
+        </div>
     </div>
 
     <!-- Report Content -->
     <div class="report-content">
+        <?php
+        // Fetch real metrics
+        $avg_temp = 0;
+        $high_pain_count = 0;
+        $total_logs = 0;
+        $mood_tired = 0;
+        $unique_users = 0;
+
+        $res = mysqli_query($conn, "SELECT temperature, pain_level, mood_status, user_id FROM symptom_logs");
+        $total_logs = mysqli_num_rows($res);
+        $user_ids = [];
+
+        if ($total_logs > 0) {
+            $temp_sum = 0;
+            while ($row = mysqli_fetch_assoc($res)) {
+                $temp_sum += $row['temperature'];
+                if ($row['pain_level'] > 3 && $row['pain_level'] !== 'N/A') $high_pain_count++;
+                if (stripos($row['mood_status'], 'Tired') !== false) $mood_tired++;
+                $user_ids[] = $row['user_id'];
+            }
+            $avg_temp = round($temp_sum / $total_logs, 1);
+            $unique_users = count(array_unique($user_ids));
+        }
+
+        $pain_percentage = ($total_logs > 0) ? round(($high_pain_count / $total_logs) * 100) : 0;
+        $tired_percentage = ($total_logs > 0) ? round(($mood_tired / $total_logs) * 100) : 0;
+        ?>
+
         <div class="report-item">
-            <span class="report-label">Week 1 Check-up Rate</span>
-            <span class="report-value">92%</span>
+            <span class="report-label">Average Body Temperature</span>
+            <span class="report-value"><?php echo $avg_temp > 0 ? $avg_temp . '°C' : 'No Data'; ?></span>
         </div>
 
         <div class="report-item">
-            <span class="report-label">Pelvic Floor Exercise Starts</span>
-            <span class="report-value">76%</span>
+            <span class="report-label">Patients Reporting High Pain (>3)</span>
+            <span class="report-value"><?php echo $pain_percentage; ?>%</span>
         </div>
 
         <div class="report-item">
-            <span class="report-label">Nutrition Plan Adherence (4 Weeks)</span>
-            <span class="report-value">68%</span>
+            <span class="report-label">Fatigue/Tiredness Reported</span>
+            <span class="report-value"><?php echo $tired_percentage; ?>%</span>
+        </div>
+
+        <div class="report-item">
+            <span class="report-label">Total Logs Analyzed</span>
+            <span class="report-value"><?php echo $total_logs; ?></span>
         </div>
     </div>
 
@@ -124,6 +160,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
     }
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

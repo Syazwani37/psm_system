@@ -5,8 +5,8 @@
  */
 
 $page_title = "Analytics - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/config/database.php';
 
 requireLogin('professional');
 
@@ -24,7 +24,7 @@ while ($row = mysqli_fetch_assoc($result_counts)) {
     if ($row['result_status'] == 'danger') $danger_count = $row['count'];
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -66,12 +66,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 </style>
 
 <div class="container py-5" style="max-width: 900px;">
-    <div class="text-center mb-5">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/professional.php" class="btn btn-outline-secondary mb-3">
-            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+    <div class="d-flex align-items-center mb-5">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+            <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 style="font-family: 'Playfair Display', serif;">Analytics Dashboard</h1>
-        <p class="text-muted">Cultivating insights for better recovery and wellness.</p>
+        <div>
+            <h1 class="mb-0" style="font-family: 'Playfair Display', serif;">Analytics Dashboard</h1>
+            <p class="text-muted mb-0">Cultivating insights for better recovery and wellness.</p>
+        </div>
     </div>
 
     <div class="row g-4">
@@ -152,6 +154,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
     });
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

@@ -8,8 +8,12 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Define base path
-define('BASE_URL', '/psm_system');
+// Load dynamic paths if not already loaded
+require_once dirname(__DIR__) . '/config/database.php';
+
+
+// Include helper functions
+require_once BASE_PATH . '/backend/helpers/functions.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -5,9 +5,9 @@
  */
 
 $page_title = "Baby Growth Tracker - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/helpers/functions.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/config/database.php';
+require_once BASE_PATH . '/backend/helpers/functions.php';
 
 requireLogin('mother');
 
@@ -77,7 +77,7 @@ while($row = mysqli_fetch_assoc($m_result)) {
     $achieved[] = $row['milestone_id'];
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 ?>
 
 <!-- Chart.js -->
@@ -124,7 +124,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 <div class="container py-5" style="max-width: 1000px;">
     <!-- Header -->
     <div class="d-flex align-items-center mb-4">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/mother.php" class="btn btn-outline-secondary btn-sm me-3">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h2 class="mb-0" style="font-family: 'Playfair Display', serif; color: #4A148C;">Baby Growth & Milestones</h2>
@@ -273,6 +273,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
     });
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

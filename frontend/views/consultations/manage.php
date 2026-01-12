@@ -5,9 +5,9 @@
  */
 
 $page_title = "Manage Consultations - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
 requireLogin('professional');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 ?>
 
 <style>
@@ -121,14 +121,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 <div class="blob blob-1" style="top: -100px; right: -100px; opacity: 0.3; background: #B2DFDB;"></div>
 
 <div class="page-container">
-    <div class="text-center mb-5">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/professional.php" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    <div class="d-flex align-items-center mb-5">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+            <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="mb-2" style="font-family: 'Playfair Display', serif; color: #006064;">
-            <i class="fas fa-calendar-check me-2" style="color: #4DB6AC;"></i> Consultation Requests
-        </h1>
-        <p class="text-muted">Manage incoming booking requests from patients.</p>
+        <div>
+            <h1 class="mb-0" style="font-family: 'Playfair Display', serif; color: #006064;">
+                <i class="fas fa-calendar-check me-2" style="color: #4DB6AC;"></i> Consultation Requests
+            </h1>
+            <p class="text-muted mb-0">Manage incoming booking requests from mothers.</p>
+        </div>
     </div>
 
     <div id="bookingsList">
@@ -269,6 +271,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
     }
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

@@ -5,27 +5,26 @@
  */
 
 $page_title = "Professional Dashboard - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/helpers/functions.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/config/database.php';
+require_once BASE_PATH . '/backend/helpers/functions.php';
 
 // Require professional role
 requireLogin('professional');
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 
 $userName = getUserName();
 
-// Fetch recent symptom logs
-$sql_logs = "SELECT s.*, u.name as patient_name 
-             FROM symptom_logs s 
-             JOIN users u ON s.user_id = u.id 
-             ORDER BY s.created_at DESC LIMIT 5";
-$result_logs = mysqli_query($conn, $sql_logs);
+// Fetch recent symptom logs with reviewer info
+// Logs query removed
+$result_logs = null;
 ?>
 
 <style>
     .dashboard-wrapper {
+        position: relative;
+        z-index: 2;
         max-width: 1100px;
         margin: 0 auto;
         padding: 1.5rem;
@@ -70,6 +69,146 @@ $result_logs = mysqli_query($conn, $sql_logs);
         border-radius: 12px;
         padding: 1rem;
         border: 1px solid rgba(0,0,0,0.05);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .log-card:hover {
+        background: #F0F7F6;
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(0, 150, 136, 0.1);
+    }
+
+    .log-card.reviewed {
+        border-left: 3px solid #4CAF50;
+    }
+
+    .log-card.follow-up {
+        border-left: 3px solid #FF9800;
+    }
+
+    .action-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .action-modal.show {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin: 1.5rem 0;
+    }
+
+    .detail-item {
+        background: #F5F5F5;
+        padding: 0.75rem;
+        border-radius: 10px;
+    }
+
+    .detail-label {
+        font-size: 0.75rem;
+        color: #757575;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .action-btn-group {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+
+    .action-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        border: 2px solid;
+        background: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: 500;
+    }
+
+    .action-btn.reviewed {
+        border-color: #4CAF50;
+        color: #4CAF50;
+    }
+
+    .action-btn.reviewed:hover, .action-btn.reviewed.active {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .action-btn.follow-up {
+        border-color: #FF9800;
+        color: #FF9800;
+    }
+
+    .action-btn.follow-up:hover, .action-btn.follow-up.active {
+        background: #FF9800;
+        color: white;
+    }
+
+    .reviewed-badge {
+        font-size: 0.7rem;
+        background: #E8F5E9;
+        color: #2E7D32;
+        padding: 2px 8px;
+        border-radius: 10px;
+        margin-left: 8px;
+    }
+
+    /* Fixed Blob Styles for Z-Index Management */
+    .blob {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: 0; /* Behind content */
+        pointer-events: none;
+    }
+
+    .blob-1 {
+        top: -150px;
+        left: -150px;
+    }
+
+    .blob-2 {
+        bottom: -150px;
+        right: -150px;
+        width: 400px;
+        height: 400px;
     }
 </style>
 
@@ -160,14 +299,14 @@ $result_logs = mysqli_query($conn, $sql_logs);
 
         <!-- Communication -->
         <div class="col-md-6 col-lg-4">
-            <a href="<?php echo BASE_URL; ?>/frontend/views/community/index.php" class="feature-card d-block">
+            <a href="<?php echo BASE_URL; ?>/frontend/views/announcements/manage.php" class="feature-card d-block">
                 <div class="feature-icon" style="background: #F3E5F5;">
-                    <i class="fas fa-comments fa-lg" style="color: #7B1FA2;"></i>
+                    <i class="fas fa-bullhorn fa-lg" style="color: #7B1FA2;"></i>
                 </div>
-                <h5 class="mb-2">Communication</h5>
-                <p class="text-muted small mb-3">Secure messaging with mothers and staff.</p>
+                <h5 class="mb-2">Announcements</h5>
+                <p class="text-muted small mb-3">Broadcast updates to all mothers.</p>
                 <span style="color: #7B1FA2; font-weight: 600;">
-                    Open Messenger <i class="fas fa-arrow-right ms-1"></i>
+                    Manage Alerts <i class="fas fa-arrow-right ms-1"></i>
                 </span>
             </a>
         </div>
@@ -187,60 +326,237 @@ $result_logs = mysqli_query($conn, $sql_logs);
         </div>
     </div>
 
-    <!-- Recent Symptom Logs -->
-    <div class="card p-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="mb-0">
-                <i class="fas fa-clipboard-list me-2" style="color: var(--primary-color);"></i>
-                Recent Symptom Logs
-            </h5>
-            <a href="<?php echo BASE_URL; ?>/frontend/views/patient_management/index.php" class="btn btn-outline-secondary btn-sm">View All</a>
-        </div>
+    <!-- Recent Symptom Logs Section Removed as per request -->
+</div>
 
-        <div class="d-flex flex-column gap-3">
-            <?php if (mysqli_num_rows($result_logs) > 0): ?>
-                <?php while ($row = mysqli_fetch_assoc($result_logs)): ?>
-                    <?php
-                    $statusClass = '';
-                    $statusText = '';
-                    
-                    if ($row['result_status'] == 'danger') {
-                        $statusClass = 'background: #FFEBEE; color: #C62828;';
-                        $statusText = 'Needs Attention';
-                    } elseif ($row['result_status'] == 'warning') {
-                        $statusClass = 'background: #E0F7FA; color: #006064;';
-                        $statusText = 'Monitoring';
-                    } else {
-                        $statusClass = 'background: #E8F5E9; color: #2E7D32;';
-                        $statusText = 'Stable';
-                    }
-                    
-                    $initials = getInitials($row['patient_name']);
-                    ?>
-                    <div class="log-card d-flex justify-content-between align-items-center">
-                        <div class="d-flex gap-3 align-items-center">
-                            <div style="width: 40px; height: 40px; background: #E0F2F1; color: #00695C; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600;">
-                                <?php echo $initials; ?>
-                            </div>
-                            <div>
-                                <div class="fw-bold"><?php echo escape($row['patient_name']); ?></div>
-                                <div class="text-muted small">
-                                    Week <?php echo $row['week_postpartum']; ?> - Temp: <?php echo $row['temperature']; ?>°C
-                                </div>
-                            </div>
-                        </div>
-                        <span class="badge rounded-pill" style="<?php echo $statusClass; ?>">
-                            <?php echo $statusText; ?>
-                        </span>
-                    </div>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <p class="text-center text-muted py-4">No symptom logs found.</p>
-            <?php endif; ?>
+<!-- Action Modal -->
+<div id="logActionModal" class="action-modal" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0" id="modalPatientName">Patient Name</h5>
+            <button onclick="closeLogModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999;">&times;</button>
+        </div>
+        
+        <div id="modalStatusBadge" class="mb-3"></div>
+        
+        <div class="detail-grid">
+            <div class="detail-item">
+                <div class="detail-label">Week Postpartum</div>
+                <div class="detail-value" id="modalWeek">-</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Temperature</div>
+                <div class="detail-value" id="modalTemp">-</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Pain Level</div>
+                <div class="detail-value" id="modalPain">-</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Wound Condition</div>
+                <div class="detail-value" id="modalWound">-</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Bleeding</div>
+                <div class="detail-value" id="modalBleeding">-</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Mood</div>
+                <div class="detail-value" id="modalMood">-</div>
+            </div>
+        </div>
+        
+        <div id="reviewerInfo" class="mb-3" style="display: none;">
+            <small class="text-muted"><i class="fas fa-check-circle text-success me-1"></i> Reviewed by <span id="reviewerName"></span></small>
+        </div>
+        
+        <hr>
+        
+        <h6 class="mb-3"><i class="fas fa-tasks me-2"></i>Take Action</h6>
+        
+        <div class="action-btn-group">
+            <button type="button" class="action-btn reviewed" id="btnReviewed" onclick="setActionStatus('reviewed')">
+                <i class="fas fa-check me-1"></i> Mark Reviewed
+            </button>
+            <button type="button" class="action-btn follow-up" id="btnFollowUp" onclick="setActionStatus('follow_up_required')">
+                <i class="fas fa-exclamation-triangle me-1"></i> Requires Follow-up
+            </button>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label small text-muted">Professional Notes</label>
+            <textarea id="professionalNotes" class="form-control" rows="3" placeholder="Add notes about this patient's condition..."></textarea>
+        </div>
+        
+        <input type="hidden" id="currentLogId" value="">
+        <input type="hidden" id="currentActionStatus" value="">
+        
+        <div class="d-flex gap-2">
+            <button onclick="saveLogAction()" class="btn btn-primary flex-grow-1">
+                <i class="fas fa-save me-1"></i> Save Action
+            </button>
+            <button onclick="closeLogModal()" class="btn btn-outline-secondary">Cancel</button>
         </div>
     </div>
 </div>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<script>
+let currentLogId = null;
+let currentActionStatus = 'reviewed';
 
+function openLogModal(logId) {
+    const card = document.querySelector(`[data-log-id="${logId}"]`);
+    if (!card) return;
+    
+    currentLogId = logId;
+    
+    // Populate modal with data from card
+    document.getElementById('modalPatientName').textContent = card.dataset.patient;
+    document.getElementById('modalWeek').textContent = 'Week ' + card.dataset.week;
+    document.getElementById('modalTemp').textContent = card.dataset.temp + '°C';
+    document.getElementById('modalPain').textContent = card.dataset.pain;
+    document.getElementById('modalWound').textContent = card.dataset.wound;
+    document.getElementById('modalBleeding').textContent = card.dataset.bleeding;
+    document.getElementById('modalMood').textContent = card.dataset.mood;
+    document.getElementById('professionalNotes').value = card.dataset.notes || '';
+    document.getElementById('currentLogId').value = logId;
+    
+    // Set status badge
+    const status = card.dataset.status;
+    let badgeHtml = '';
+    if (status === 'danger') {
+        badgeHtml = '<span class="badge" style="background: #FFEBEE; color: #C62828;">⚠ Needs Attention</span>';
+    } else if (status === 'warning') {
+        badgeHtml = '<span class="badge" style="background: #FFF3E0; color: #EF6C00;">👀 Monitoring</span>';
+    } else {
+        badgeHtml = '<span class="badge" style="background: #E8F5E9; color: #2E7D32;">✓ Stable</span>';
+    }
+    document.getElementById('modalStatusBadge').innerHTML = badgeHtml;
+    
+    // Show reviewer info if already reviewed
+    const reviewer = card.dataset.reviewer;
+    if (reviewer) {
+        document.getElementById('reviewerInfo').style.display = 'block';
+        document.getElementById('reviewerName').textContent = reviewer;
+    } else {
+        document.getElementById('reviewerInfo').style.display = 'none';
+    }
+    
+    // Set active button based on current action status
+    const actionStatus = card.dataset.actionStatus;
+    setActionStatus(actionStatus === 'pending' ? 'reviewed' : actionStatus);
+    
+    // Show modal
+    document.getElementById('logActionModal').classList.add('show');
+}
 
+function closeLogModal() {
+    document.getElementById('logActionModal').classList.remove('show');
+    currentLogId = null;
+}
+
+function closeModalOnBackdrop(event) {
+    if (event.target.id === 'logActionModal') {
+        closeLogModal();
+    }
+}
+
+function setActionStatus(status) {
+    currentActionStatus = status;
+    document.getElementById('currentActionStatus').value = status;
+    
+    // Update button states
+    document.getElementById('btnReviewed').classList.remove('active');
+    document.getElementById('btnFollowUp').classList.remove('active');
+    
+    if (status === 'reviewed') {
+        document.getElementById('btnReviewed').classList.add('active');
+    } else if (status === 'follow_up_required') {
+        document.getElementById('btnFollowUp').classList.add('active');
+    }
+}
+
+function saveLogAction() {
+    const logId = document.getElementById('currentLogId').value;
+    const notes = document.getElementById('professionalNotes').value;
+    const actionStatus = currentActionStatus;
+    
+    if (!logId) {
+        alert('Error: No log selected');
+        return;
+    }
+    
+    fetch('<?php echo BASE_URL; ?>/backend/api/symptom_checker/save_log_action.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            log_id: parseInt(logId),
+            notes: notes,
+            action_status: actionStatus
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the card visually
+            const card = document.querySelector(`[data-log-id="${logId}"]`);
+            if (card) {
+                card.dataset.notes = notes;
+                card.dataset.actionStatus = actionStatus;
+                card.classList.remove('reviewed', 'follow-up');
+                if (actionStatus === 'reviewed') card.classList.add('reviewed');
+                if (actionStatus === 'follow_up_required') card.classList.add('follow-up');
+                
+                // Update badge in card
+                const nameDiv = card.querySelector('.fw-bold');
+                let badge = nameDiv.querySelector('.reviewed-badge');
+                if (badge) badge.remove();
+                
+                if (actionStatus === 'reviewed') {
+                    nameDiv.innerHTML += '<span class="reviewed-badge">✓ Reviewed</span>';
+                } else if (actionStatus === 'follow_up_required') {
+                    nameDiv.innerHTML += '<span class="reviewed-badge" style="background: #FFF3E0; color: #EF6C00;">⚠ Follow-up</span>';
+                }
+            }
+            
+            closeLogModal();
+            
+            // Show success toast
+            showToast('Action saved successfully!', 'success');
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to save action. Please try again.');
+    });
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#4CAF50' : '#f44336'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        z-index: 2000;
+        animation: slideUp 0.3s ease;
+    `;
+    toast.innerHTML = `<i class="fas fa-check-circle me-2"></i>${message}`;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>
+
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>

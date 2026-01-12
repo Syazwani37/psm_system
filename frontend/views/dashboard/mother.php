@@ -5,20 +5,22 @@
  */
 
 $page_title = "Mother Dashboard - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/config/database.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/helpers/functions.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
+require_once BASE_PATH . '/backend/config/database.php';
+require_once BASE_PATH . '/backend/helpers/functions.php';
 
 // Require mother role
 requireLogin('mother');
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/header.php';
 
 $userName = getUserName();
 ?>
 
 <style>
     .dashboard-wrapper {
+        position: relative;
+        z-index: 2;
         max-width: 900px;
         margin: 0 auto;
         padding: 1rem;
@@ -59,6 +61,29 @@ $userName = getUserName();
         padding: 1.5rem;
         margin-bottom: 2rem;
     }
+
+    /* Fixed Blob Styles */
+    .blob {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(80px);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .blob-1 {
+        width: 300px;
+        height: 300px;
+        top: -100px;
+        left: -100px;
+    }
+
+    .blob-2 {
+        width: 400px;
+        height: 400px;
+        bottom: -100px;
+        right: -100px;
+    }
 </style>
 
 <!-- Decorative Blobs -->
@@ -71,6 +96,8 @@ $userName = getUserName();
         <a href="<?php echo BASE_URL; ?>/frontend/views/auth/logout.php" class="btn btn-outline-danger">
             <i class="fas fa-sign-out-alt me-1"></i> Logout
         </a>
+    </header>
+
     </header>
 
     <!-- Welcome Card -->
@@ -234,43 +261,46 @@ $userName = getUserName();
             <i class="fas fa-lightbulb text-warning me-2"></i>Daily Tips
         </h5>
         <div class="row g-3">
-            <div class="col-md-4">
-                <div class="d-flex gap-3 align-items-start">
-                    <div style="background: #E1F5FE; padding: 0.5rem; border-radius: 10px; color: #0288D1;">
-                        <i class="fas fa-glass-water"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-1">Hydrate</h6>
-                        <p class="text-muted small mb-0">Drink 8 glasses of water.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="d-flex gap-3 align-items-start">
-                    <div style="background: #F3E5F5; padding: 0.5rem; border-radius: 10px; color: #8E24AA;">
-                        <i class="fas fa-bed"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-1">Rest Well</h6>
-                        <p class="text-muted small mb-0">Sleep when your baby sleeps.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="d-flex gap-3 align-items-start">
-                    <div style="background: #E8F5E9; padding: 0.5rem; border-radius: 10px; color: #388E3C;">
-                        <i class="fas fa-walking"></i>
-                    </div>
-                    <div>
-                        <h6 class="mb-1">Move</h6>
-                        <p class="text-muted small mb-0">Take a light 10 min walk.</p>
-                    </div>
-                </div>
-            </div>
+            <?php
+            // Include tips data
+            $tips_file = BASE_PATH . '/backend/data/tips_data.php';
+            if (file_exists($tips_file)) {
+                require_once $tips_file;
+                
+                // Shuffle and pick 3
+                if (isset($daily_tips_data) && is_array($daily_tips_data)) {
+                    // Seed the random number generator with the day of the year so it stays same for the day
+                    // srand(date('z') + date('Y')); 
+                    // actually user prefers fresh feel "every time she logs in", so true random is better
+                    shuffle($daily_tips_data); 
+                    
+                    $todays_tips = array_slice($daily_tips_data, 0, 3);
+                    
+                    foreach ($todays_tips as $tip) {
+                        ?>
+                        <div class="col-md-4">
+                            <div class="d-flex gap-3 align-items-start h-100 p-2 rounded-3 hover-bg" style="transition: background 0.2s;">
+                                <div style="background: <?php echo $tip['color_bg']; ?>; padding: 0.6rem; border-radius: 12px; color: <?php echo $tip['color_text']; ?>; min-width: 45px; text-align: center;">
+                                    <i class="fas <?php echo $tip['icon']; ?>"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1 fw-bold text-dark"><?php echo $tip['title']; ?></h6>
+                                    <p class="text-secondary small mb-0" style="font-size: 0.85rem; line-height: 1.4;"><?php echo $tip['text']; ?></p>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                }
+            } else {
+                // Fallback static if file missing
+                echo '<p class="text-muted">Stay hydrated and rested!</p>';
+            }
+            ?>
         </div>
     </div>
 </div>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

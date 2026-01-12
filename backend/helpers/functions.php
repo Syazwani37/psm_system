@@ -123,4 +123,26 @@ function generateCsrfToken() {
 function verifyCsrfToken($token) {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
+
+/**
+ * Get dashboard URL based on user role
+ * @param string|null $role
+ * @return string
+ */
+function getDashboardUrl($role = null) {
+    if (!$role && isset($_SESSION['role'])) {
+        $role = $_SESSION['role'];
+    }
+
+    switch ($role) {
+        case 'mother':
+            return BASE_URL . '/frontend/views/dashboard/mother.php';
+        case 'professional':
+            return BASE_URL . '/frontend/views/dashboard/professional.php';
+        case 'admin':
+            return BASE_URL . '/frontend/views/dashboard/admin.php';
+        default:
+            return BASE_URL . '/frontend/views/auth/login.php';
+    }
+}
 ?>

@@ -5,9 +5,10 @@
  */
 
 $page_title = "Mom's Circle - PSM System";
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/auth_check.php';
-requireLogin('mother');
-require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.php';
+require_once BASE_PATH . '/backend/includes/auth_check.php';
+// Allow both mother and professional roles
+requireLogin(); 
+require_once BASE_PATH . '/backend/includes/header.php';
 ?>
 
 <style>
@@ -157,22 +158,58 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
 <div class="blob blob-1" style="top: -200px; left: -200px; opacity: 0.3;"></div>
 
 <div class="page-container">
-    <div class="text-center mb-5">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/mother.php" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+    <div class="d-flex align-items-center mb-5">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+            <i class="fas fa-arrow-left"></i>
         </a>
-        <h1 class="mb-2" style="font-family: 'Playfair Display', serif; color: #4A5D53;">
-            <i class="fas fa-heart me-2" style="color: #E6B8B8;"></i> Mom's Circle
-        </h1>
-        <p class="text-muted">A safe, judgment-free space to share your journey.</p>
+        <div>
+            <h1 class="mb-0" style="font-family: 'Playfair Display', serif; color: #4A5D53;">
+                <i class="fas fa-heart me-2" style="color: #E6B8B8;"></i> Mom's Circle
+            </h1>
+            <p class="text-muted mb-0">A safe, judgment-free space to share your journey.</p>
+        </div>
     </div>
+
+    <!-- Official Announcements -->
+    <?php
+    require_once BASE_PATH . '/backend/config/database.php'; // Ensure DB is available
+    $ann_sql = "SELECT title, message, type, created_at FROM announcements ORDER BY created_at DESC LIMIT 3";
+    $ann_result = $conn->query($ann_sql);
+    
+    if ($ann_result && $ann_result->num_rows > 0) {
+        ?>
+        <div class="mb-4 text-start">
+            <h5 class="mb-3 text-secondary"><i class="fas fa-bullhorn me-2"></i>Official Updates</h5>
+            <?php
+            while ($ann = $ann_result->fetch_assoc()) {
+                $alertClass = 'alert-info';
+                $icon = 'fa-info-circle';
+                
+                if ($ann['type'] == 'warning') { $alertClass = 'alert-warning'; $icon = 'fa-exclamation-triangle'; }
+                if ($ann['type'] == 'danger') { $alertClass = 'alert-danger'; $icon = 'fa-exclamation-circle'; }
+                if ($ann['type'] == 'success') { $alertClass = 'alert-success'; $icon = 'fa-check-circle'; }
+                ?>
+                <div class="alert <?php echo $alertClass; ?> border-0 rounded-3 shadow-sm mb-2 d-flex align-items-start gap-3" role="alert">
+                    <i class="fas <?php echo $icon; ?> mt-1 fa-lg"></i>
+                    <div>
+                        <h6 class="alert-heading fw-bold mb-1"><?php echo escape($ann['title']); ?></h6>
+                        <p class="mb-0 small opacity-75"><?php echo escape($ann['message']); ?></p>
+                        <small class="text-muted" style="font-size: 0.7em;"><?php echo date('M d, h:i A', strtotime($ann['created_at'])); ?></small>
+                    </div>
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+    }
+    ?>
 
     <div class="chat-card">
         <div class="chat-header">
             <div class="icon"><i class="fas fa-users"></i></div>
             <div>
                 <h2>General Support</h2>
-                <div style="font-size: 0.85rem; color: #949494;">24 mothers online</div>
             </div>
         </div>
 
@@ -180,6 +217,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
             <div class="message admin"><i class="fas fa-shield-alt me-2"></i> Welcome! This is a safe space for sharing and support.</div>
             <div class="message">Hi everyone! Just wanted to share my postpartum experience 😊</div>
             <div class="message user">Same here! I'm 4 weeks postpartum and loving this space.</div>
+            <div class="message">Has anyone tried the new yoga routine in the Recovery Tracker? It's amazing! 🧘‍♀️</div>
+            <div class="message user">Yes! It really helped with my back pain. Highly recommend it.</div>
+            <div class="message">I'm struggling a bit with sleep schedules. Any tips? 😴</div>
+            <div class="message user">Try the "Rest Well" tip from the dashboard - sleep when baby sleeps! It's a lifesaver.</div>
+            <div class="message">Thanks! needed to hear that today. 💕</div>
         </div>
 
         <div class="chat-input-area">
@@ -211,6 +253,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/header.ph
     }
 </script>
 
-<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/psm_system/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 
