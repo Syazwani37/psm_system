@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once dirname(__DIR__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Save Professional Action on Symptom Log
  * API Endpoint: POST /backend/api/symptom_checker/save_log_action.php

@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once dirname(__DIR__, 1) . '/backend/config/database.php';
 /**
  * PSM System - Database Migration
  * Add professional action columns to symptom_logs table

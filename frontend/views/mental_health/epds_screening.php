@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once dirname(__DIR__, 3) . '/backend/config/database.php';
 /**
  * PSM System - EPDS Screening
  * Frontend View: Mental Health Module
@@ -143,64 +143,64 @@ require_once BASE_PATH . '/backend/includes/header.php';
     <!-- Header -->
     <div class="d-flex align-items-center mb-4">
         <a href="<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/dashboard/mother.php" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/dashboard/mother.php" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h2 class="mb-0" style="font-family: 'Playfair Display', serif; color: #880E4F;">Mental Health Screening</h2>
     </div>
 
     <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; displayFlashMessage(); ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; displayFlashMessage(); ?>
 
     <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; if ($show_result): ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; if ($show_result): ?>
         <!-- Result View -->
         <div class="result-card">
             <div class="score-circle bg-<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $alert_color; ?>-custom">
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $alert_color; ?>-custom">
                 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $total_score; ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $total_score; ?>
             </div>
             
             <h2 class="mb-3">Result: <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $risk_level; ?> Risk</h2>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $risk_level; ?> Risk</h2>
             <p class="lead text-muted mb-4"><?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $message; ?></p>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $message; ?></p>
 
             <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; if ($risk_level == 'High' || $q10_score > 0): ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; if ($risk_level == 'High' || $q10_score > 0): ?>
                 <div class="alert alert-danger border-danger">
                     <i class="fas fa-exclamation-circle fa-lg me-2"></i> <strong>Important:</strong> Please consult a doctor immediately.<br>
                     For urgent help, call <strong>999</strong> or your local crisis line.
                 </div>
                 <div class="d-grid gap-2 d-sm-flex justify-content-center mt-4">
                     <a href="<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/consultations/book.php" class="btn btn-danger btn-lg px-5 rounded-pill">
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/consultations/book.php" class="btn btn-danger btn-lg px-5 rounded-pill">
                         Book Consultation Now
                     </a>
                     <a href="<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/resources/support.php" class="btn btn-outline-danger btn-lg px-5 rounded-pill">
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/resources/support.php" class="btn btn-outline-danger btn-lg px-5 rounded-pill">
                         Find Support
                     </a>
                 </div>
             <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; else: ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; else: ?>
                 <div class="d-grid gap-2 d-sm-flex justify-content-center mt-4">
                     <a href="<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/resources/articles.php" class="btn btn-success btn-lg px-5 rounded-pill">
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/resources/articles.php" class="btn btn-success btn-lg px-5 rounded-pill">
                         Read Wellness Tips
                     </a>
                     <a href="<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $_SERVER['PHP_SELF']; ?>" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $_SERVER['PHP_SELF']; ?>" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">
                         Take Test Again
                     </a>
                 </div>
             <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; endif; ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; endif; ?>
         </div>
 
     <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; else: ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; else: ?>
         <!-- Questionnaire Form -->
         <div class="card border-0 shadow-sm" style="border-radius: 20px; background: #FFF0F5;">
             <div class="card-body p-4 p-md-5">
@@ -329,10 +329,10 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; else: ?
             </div>
         </div>
     <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; endif; ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; endif; ?>
 </div>
 
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

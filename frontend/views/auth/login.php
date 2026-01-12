@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once dirname(__DIR__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Login Page
  * Frontend View: Auth Module
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <style>
     body {
         background: url('<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/assets/images/mom_and_baby_background.jpg') no-repeat center center/cover;
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/assets/images/mom_and_baby_background.jpg') no-repeat center center/cover;
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -146,14 +146,14 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo BA
         </div>
 
         <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; if ($error): ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; if ($error): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="fas fa-exclamation-circle me-2"></i><?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $error; ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $error; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; endif; ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; endif; ?>
 
         <form method="POST" action="">
             <div class="mb-3">
@@ -187,6 +187,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; endif; 
 </div>
 
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

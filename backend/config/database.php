@@ -1,8 +1,12 @@
 <?php
 /**
  * PSM System - Database Configuration
- * Backend Configuration File
  */
+
+// Aktifkan error reporting untuk kita nampak punca blank screen
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 
 // Database Configuration - Try multiple naming conventions used by Railway
 $host = getenv('MYSQLHOST') ?: getenv('MYSQL_HOST') ?: getenv('DATABASE_HOST');

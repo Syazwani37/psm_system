@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once dirname(__DIR__, 3) . '/backend/config/database.php';
 /**
  * PSM System - User Engagement Report
  * Frontend View: Reports Module
@@ -68,7 +68,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
         <a href="<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -83,7 +83,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo ge
     <div class="report-card">
         <div>
             <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
+require_once dirname(__DIR__, 3) . '/backend/config/database.php';
             // Fetch real user stats
             $users_res = mysqli_query($conn, "SELECT role, COUNT(*) as c FROM users GROUP BY role");
             $roles = [];
@@ -110,23 +110,23 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
             <div class="section-title">📊 Key Metrics</div>
             <ul class="list-group list-group-flush mt-2">
                 <li class="list-group-item"><i class="fas fa-users me-2 text-primary"></i> <strong>Total Users:</strong> <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $total_users; ?> (<?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $mothers; ?> Mothers, <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $profs; ?> Professionals, <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $admins; ?> Admins)</li>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $total_users; ?> (<?php
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $mothers; ?> Mothers, <?php
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $profs; ?> Professionals, <?php
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $admins; ?> Admins)</li>
                 <li class="list-group-item"><i class="fas fa-file-medical me-2 text-success"></i> <strong>Total Symptom Logs:</strong> <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $total_logs; ?> entries recorded</li>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $total_logs; ?> entries recorded</li>
                 <li class="list-group-item"><i class="fas fa-star me-2 text-warning"></i> <strong>Most Used Feature:</strong> Symptom Logging</li>
                 <li class="list-group-item"><i class="fas fa-calendar-alt me-2 text-info"></i> <strong>Last Active Day:</strong> <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $last_active; ?></li>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $last_active; ?></li>
             </ul>
 
             <div class="section-title">💡 Insights & Recommendations</div>
             <ul class="list-group list-group-flush mt-2">
                 <li class="list-group-item"><i class="fas fa-check me-2 text-success"></i> <strong>User Base:</strong> <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo ($mothers > $profs) ? 'Strong mother participation' : 'Balanced ecosystem'; ?></li>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo ($mothers > $profs) ? 'Strong mother participation' : 'Balanced ecosystem'; ?></li>
                 <li class="list-group-item"><i class="fas fa-check me-2 text-success"></i> <strong>Data Growth:</strong> <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo ($total_logs > 10) ? 'Healthy data accumulation' : 'Encourage more logging'; ?></li>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo ($total_logs > 10) ? 'Healthy data accumulation' : 'Encourage more logging'; ?></li>
                 <li class="list-group-item"><i class="fas fa-check me-2 text-success"></i> Highlight new resources in the Resource Library</li>
             </ul>
         </div>
@@ -140,6 +140,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo ($
 </div>
 
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once dirname(__DIR__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 
