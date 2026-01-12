@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Community Support
  * Frontend View: Community Module
@@ -161,7 +161,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
         <a href="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -174,7 +174,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
 
     <!-- Official Announcements -->
     <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
      // Ensure DB is available
     $ann_sql = "SELECT title, message, type, created_at FROM announcements ORDER BY created_at DESC LIMIT 3";
     $ann_result = $conn->query($ann_sql);
@@ -184,7 +184,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
         <div class="mb-4 text-start">
             <h5 class="mb-3 text-secondary"><i class="fas fa-bullhorn me-2"></i>Official Updates</h5>
             <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
             while ($ann = $ann_result->fetch_assoc()) {
                 $alertClass = 'alert-info';
                 $icon = 'fa-info-circle';
@@ -194,25 +194,25 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                 if ($ann['type'] == 'success') { $alertClass = 'alert-success'; $icon = 'fa-check-circle'; }
                 ?>
                 <div class="alert <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $alertClass; ?> border-0 rounded-3 shadow-sm mb-2 d-flex align-items-start gap-3" role="alert">
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo $alertClass; ?> border-0 rounded-3 shadow-sm mb-2 d-flex align-items-start gap-3" role="alert">
                     <i class="fas <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $icon; ?> mt-1 fa-lg"></i>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo $icon; ?> mt-1 fa-lg"></i>
                     <div>
                         <h6 class="alert-heading fw-bold mb-1"><?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($ann['title']); ?></h6>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo escape($ann['title']); ?></h6>
                         <p class="mb-0 small opacity-75"><?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($ann['message']); ?></p>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo escape($ann['message']); ?></p>
                         <small class="text-muted" style="font-size: 0.7em;"><?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('M d, h:i A', strtotime($ann['created_at'])); ?></small>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo date('M d, h:i A', strtotime($ann['created_at'])); ?></small>
                     </div>
                 </div>
                 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
             }
             ?>
         </div>
         <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
     }
     ?>
 
@@ -265,6 +265,6 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 </script>
 
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

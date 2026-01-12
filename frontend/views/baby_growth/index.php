@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Baby Growth Tracker
  * Frontend View: Baby Growth Module
@@ -126,14 +126,14 @@ require_once BASE_PATH . '/backend/includes/header.php';
     <!-- Header -->
     <div class="d-flex align-items-center mb-4">
         <a href="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h2 class="mb-0" style="font-family: 'Playfair Display', serif; color: #4A148C;">Baby Growth & Milestones</h2>
     </div>
 
     <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlashMessage(); ?>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; displayFlashMessage(); ?>
 
     <div class="row g-4">
         <!-- Growth Entry Form -->
@@ -152,7 +152,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
                         <div class="mb-3">
                             <label class="form-label text-muted small fw-bold">Date</label>
                             <input type="date" name="date" class="form-control" required value="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('Y-m-d'); ?>">
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo date('Y-m-d'); ?>">
                         </div>
                         
                         <div class="row">
@@ -192,7 +192,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('Y
                     
                     <div style="max-height: 320px; overflow-y: auto;">
                         <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
                         $milestones_list = [
                             '1m_smile' => 'Smiles at people',
                             '1m_head' => 'Can hold head up briefly',
@@ -211,21 +211,21 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                             <form method="POST" class="d-flex w-100 align-items-center m-0">
                                 <input type="hidden" name="toggle_milestone" value="1">
                                 <input type="hidden" name="milestone_id" value="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $id; ?>">
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo $id; ?>">
                                 <input type="hidden" name="milestone_name" value="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $name; ?>">
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo $name; ?>">
                                 <input type="checkbox" class="milestone-check" onchange="this.form.submit()" <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $is_done ? 'checked' : ''; ?>>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo $is_done ? 'checked' : ''; ?>>
                                 <span class="milestone-label <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $is_done ? 'done' : ''; ?>" 
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo $is_done ? 'done' : ''; ?>" 
                                       onclick="this.previousElementSibling.click()">
                                     <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $name; ?>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo $name; ?>
                                 </span>
                             </form>
                         </div>
                         <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endforeach; ?>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -255,11 +255,11 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endforeach; 
         type: 'line',
         data: {
             labels: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_encode($dates); ?>,
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo json_encode($dates); ?>,
             datasets: [{
                 label: 'Weight (kg)',
                 data: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_encode($weights); ?>,
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo json_encode($weights); ?>,
                 borderColor: '#9575CD',
                 backgroundColor: 'rgba(149, 117, 205, 0.1)',
                 fill: true,
@@ -267,7 +267,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_en
             }, {
                 label: 'Height (cm)',
                 data: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_encode($heights); ?>,
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo json_encode($heights); ?>,
                 borderColor: '#26C6DA',
                 borderDash: [5, 5],
                 fill: false,
@@ -288,6 +288,6 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_en
 </script>
 
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 
