@@ -4,41 +4,50 @@
  * Backend Configuration File
  */
 
-// Database Configuration from Environment Variables (Railway) or Defaults (Local)
-$host = getenv('MYSQLHOST') ?: 'localhost';
-$user = getenv('MYSQLUSER') ?: 'root';
-$password = getenv('MYSQLPASSWORD') ?: ''; // Default Laragon password is empty
-$database = getenv('MYSQLDATABASE') ?: 'psm_system';
+// Database Configuration
+$host = getenv('MYSQLHOST');
+$user = getenv('MYSQLUSER');
+$password = getenv('MYSQLPASSWORD');
+$database = getenv('MYSQLDATABASE');
 $port = getenv('MYSQLPORT') ?: 3306;
 
+// If we are on Railway but variables are missing
+if (!$host && getenv('RAILWAY_ENVIRONMENT')) {
+    die("❌ Error: Railway environment detected but MYSQLHOST is missing.");
+}
+
+// Defaults for local Laragon
+$host = $host ?: '127.0.0.1';
+$user = $user ?: 'root';
+$password = $password ?: '';
+$database = $database ?: 'psm_system';
+
+// IMPORTANT: On Linux (Railway), if host is 'localhost', PHP tries to use a socket file.
+// We want to force it to use TCP.
+if ($host === 'localhost') {
+    $host = '127.0.0.1';
+}
+
+
 // Define Base Paths
-// BASE_PATH is the physical directory on the server
 if (!defined('BASE_PATH')) {
     define('BASE_PATH', dirname(__DIR__, 2));
 }
 
-// BASE_URL is the URL path (e.g., /psm_system or /)
+// BASE_URL detection
 if (!defined('BASE_URL')) {
-    // Detect if we are in a subdirectory (like /psm_system) or at the root
-    $script_name = $_SERVER['SCRIPT_NAME'];
-    $project_folder = '/psm_system';
-    
-    if (strpos($script_name, $project_folder) !== false) {
-        define('BASE_URL', $project_folder);
-    } else {
-        define('BASE_URL', '');
-    }
+    $script_name = $_SERVER['SCRIPT_NAME'] ?? '';
+    define('BASE_URL', (strpos($script_name, '/psm_system') !== false) ? '/psm_system' : '');
 }
 
-// Create connection
-$conn = mysqli_connect($host, $user, $password, $database, $port);
-
-// Check connection
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+// Create connection with error handling
+mysqli_report(MYSQLI_REPORT_STRICT | MYSQLI_REPORT_ERROR);
+try {
+    $conn = mysqli_connect($host, $user, $password, $database, $port);
+    mysqli_set_charset($conn, "utf8mb4");
+} catch (mysqli_sql_exception $e) {
+    die("❌ Database Connection Failed: " . $e->getMessage());
 }
 
-// Set charset
-mysqli_set_charset($conn, "utf8mb4");
 ?>
 
