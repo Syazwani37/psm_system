@@ -1,6 +1,6 @@
 <?php
 // restore_accounts.php
-require_once 'backend/config/database.php';
+require_once __DIR__ . '/backend/config/database.php';
 
 function restoreUser($conn, $name, $email, $password, $role) {
     // 1. Check if email exists

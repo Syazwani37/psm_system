@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Expert Articles
  * Frontend View: Resources Module
@@ -106,7 +106,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo getDashb
     <div class="articles-grid">
         <!-- Dynamic Uploaded Resources -->
         <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
         // Fetch resources (Exclude videos)
         $resQuery = "SELECT * FROM resources WHERE file_path NOT LIKE '%.mp4' AND file_path NOT LIKE '%.avi' AND file_path NOT LIKE '%.mov' ORDER BY created_at DESC";
         $resResult = mysqli_query($conn, $resQuery);
@@ -133,7 +133,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($
                     </div>
                 </div>
                 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
             }
         }
         ?>

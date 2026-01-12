@@ -1,5 +1,5 @@
 <?php
-require_once 'backend/config/database.php';
+require_once __DIR__ . '/backend/config/database.php';
 
 echo "<h1>Database Check: Resources</h1>";
 

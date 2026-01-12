@@ -5,7 +5,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once 'backend/config/database.php';
+require_once __DIR__ . '/backend/config/database.php';
 
 $updates = [
     'hanan@psm.com' => 'hanan@gmail.com',

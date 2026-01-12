@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Manage Announcements
  * Frontend View: Announcements Module
@@ -106,7 +106,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
     <h5 class="mb-3">Active Announcements</h5>
     <div class="d-flex flex-column gap-2">
         <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
         $sql = "SELECT * FROM announcements ORDER BY created_at DESC";
         $result = $conn->query($sql);
 
@@ -141,7 +141,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $row['id
                     </form>
                 </div>
                 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
             }
         } else {
             echo '<p class="text-muted text-center py-4">No active announcements.</p>';

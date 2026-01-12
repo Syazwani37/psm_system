@@ -36,10 +36,11 @@ if ($host === 'localhost') {
 }
 
 
-// Define Base Paths
+// Define Base Paths - Paling stabil guna realpath
 if (!defined('BASE_PATH')) {
-    define('BASE_PATH', dirname(__DIR__, 2));
+    define('BASE_PATH', realpath(__DIR__ . '/../../'));
 }
+
 
 // BASE_URL detection
 if (!defined('BASE_URL')) {

@@ -1,5 +1,5 @@
 <?php
-require_once 'backend/config/database.php';
+require_once __DIR__ . '/backend/config/database.php';
 
 $sql = "CREATE TABLE IF NOT EXISTS announcements (
     id INT AUTO_INCREMENT PRIMARY KEY,

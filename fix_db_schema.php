@@ -1,5 +1,5 @@
 <?php
-require_once 'backend/config/database.php';
+require_once __DIR__ . '/backend/config/database.php';
 
 $table = 'consultations';
 $result = mysqli_query($conn, "SHOW COLUMNS FROM $table");

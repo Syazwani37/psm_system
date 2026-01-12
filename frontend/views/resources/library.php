@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Resource Library
  * Frontend View: Resources Module (Professional)
@@ -138,7 +138,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; endif; ?>
 
     <div class="resource-grid">
         <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
         
         
         $query = "SELECT * FROM resources ORDER BY created_at DESC";
@@ -192,7 +192,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $row['id
 require_once dirname(__DIR__, 3) . '/backend/config/database.php'; endif; ?>
                 </div>
                 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
             }
         } else {
             echo '<div class="col-12 text-center text-muted py-5">No resources found. Upload one to get started!</div>';

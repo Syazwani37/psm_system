@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Patient Management
  * Frontend View: Patient Management Module
@@ -73,7 +73,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo getDashb
 
     <div class="d-flex flex-column gap-3">
         <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
         // Fetch latest log for each patient using correlated subquery logic (or MAX ID logic)
         $sql = "SELECT s.*, u.name as patient_name 
                 FROM symptom_logs s 
@@ -137,7 +137,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $row['us
                 </div>
             </div>
         <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
             }
         } else {
             echo '
