@@ -3,6 +3,7 @@
     "description": "DSS Recovery Guide for Mom & Baby",
     "type": "project",
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.0",
+        "ext-mysqli": "*"
     }
 }
