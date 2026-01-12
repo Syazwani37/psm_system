@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
 /**
  * PSM System - Patient History
  * Frontend View: Patient History Log
@@ -56,12 +56,12 @@ $stmt->close();
 <div class="page-container">
     <div class="text-center mb-5">
         <a href="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/patient_management/index.php" class="btn btn-outline-secondary btn-sm mb-3">
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/patient_management/index.php" class="btn btn-outline-secondary btn-sm mb-3">
             <i class="fas fa-arrow-left me-2"></i> Back to Patient List
         </a>
         <h1 class="mb-2" style="font-family: 'Playfair Display', serif; color: #00695C;">
             Log History: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($patientName); ?>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo escape($patientName); ?>
         </h1>
         <p class="text-muted">Complete record of symptom checks.</p>
     </div>
@@ -79,7 +79,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape(
                 </thead>
                 <tbody>
                     <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
                     $stmt = $conn->prepare("SELECT * FROM symptom_logs WHERE user_id = ? ORDER BY created_at DESC");
                     $stmt->bind_param("i", $patient_id);
                     $stmt->execute();
@@ -99,23 +99,23 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                             <tr>
                                 <td class="ps-4">
                                     <div class="fw-medium text-dark"><?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('M d, Y', strtotime($row['created_at'])); ?></div>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo date('M d, Y', strtotime($row['created_at'])); ?></div>
                                     <div class="small text-muted"><?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('h:i A', strtotime($row['created_at'])); ?></div>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo date('h:i A', strtotime($row['created_at'])); ?></div>
                                 </td>
                                 <td>Week <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['week_postpartum']); ?></td>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo escape($row['week_postpartum']); ?></td>
                                 <td>
                                     <div><i class="fas fa-thermometer-half text-secondary me-1"></i> <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['temperature']); ?>°C</div>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo escape($row['temperature']); ?>°C</div>
                                     <div><i class="fas fa-sad-tear text-secondary me-1"></i> Pain: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['pain_level']); ?>/10</div>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo escape($row['pain_level']); ?>/10</div>
                                 </td>
                                 <td><?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $statusBadge; ?></td>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $statusBadge; ?></td>
                             </tr>
                             <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
                         }
                     } else {
                         echo '<tr><td colspan="4" class="text-center py-5 text-muted">No history found for this patient.</td></tr>';
@@ -129,4 +129,4 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 </div>
 
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>

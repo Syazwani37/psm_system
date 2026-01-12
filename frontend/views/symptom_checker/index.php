@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php';
 /**
  * PSM System - Symptom Checker
  * Frontend View: Symptom Checker Module
@@ -137,7 +137,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
         <!-- Back Button -->
         <div class="d-flex align-items-center mb-4">
             <a href="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
                 <i class="fas fa-arrow-left"></i>
             </a>
             <div>
@@ -147,7 +147,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
         </div>
 
         <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlashMessage(); ?>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; displayFlashMessage(); ?>
 
         <form method="POST" action="">
             <div class="form-grid">
@@ -209,7 +209,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
 
             <!-- Result Area -->
             <div id="resultArea" style="display: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo ($save_status == 'success') ? 'block' : 'none'; ?>;">
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo ($save_status == 'success') ? 'block' : 'none'; ?>;">
                 <div id="resultCard" class="result-card">
                     <div id="resultIcon" style="font-size: 2.5rem; margin-bottom: 1rem;"></div>
                     <h3 id="resultTitle" style="margin-bottom: 0.5rem; font-family: 'Playfair Display', serif;"></h3>
@@ -228,17 +228,17 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo ($save_
 
 <script>
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if ($save_status == 'success'): ?>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; if ($save_status == 'success'): ?>
     const temp = <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $temp; ?>;
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $temp; ?>;
     const bleeding = "<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $bleeding; ?>";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $bleeding; ?>";
     const pain = "<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $pain; ?>";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $pain; ?>";
     const wound = "<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $wound; ?>";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $wound; ?>";
     const mood = "<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $mood; ?>";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; echo $mood; ?>";
 
     const resultCard = document.getElementById("resultCard");
     const resultIcon = document.getElementById("resultIcon");
@@ -275,10 +275,10 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $mood; 
         document.getElementById("resultArea").scrollIntoView({ behavior: 'smooth' });
     }, 100);
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; endif; ?>
 </script>
 
 <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once $_SERVER['DOCUMENT_ROOT'] . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 
