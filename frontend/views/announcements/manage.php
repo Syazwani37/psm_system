@@ -51,7 +51,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
         <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/dashboard/professional.php" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/dashboard/professional.php" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -66,7 +66,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
     <div class="form-card">
         <h5 class="mb-4">📢 Post New Announcement</h5>
         <form action="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/announcements/create.php" method="POST">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/announcements/create.php" method="POST">
             <div class="mb-3">
                 <label class="form-label">Title</label>
                 <input type="text" name="title" class="form-control" placeholder="e.g., Flu Season Warning" required>
@@ -121,20 +121,20 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                     <div>
                         <div class="d-flex align-items-center gap-2 mb-1">
                             <span class="badge <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $typeClass; ?> rounded-pill" style="font-size: 0.7rem;"><?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo strtoupper($row['type']); ?></span>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $typeClass; ?> rounded-pill" style="font-size: 0.7rem;"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo strtoupper($row['type']); ?></span>
                             <span class="text-muted small"><?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo date('M d, Y h:i A', strtotime($row['created_at'])); ?></span>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('M d, Y h:i A', strtotime($row['created_at'])); ?></span>
                         </div>
                         <h6 class="mb-1 fw-bold"><?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($row['title']); ?></h6>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['title']); ?></h6>
                         <p class="text-secondary small mb-0"><?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($row['message']); ?></p>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['message']); ?></p>
                     </div>
                     <form action="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/announcements/delete.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this?');">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/announcements/delete.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this?');">
                         <input type="hidden" name="announcement_id" value="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $row['id']; ?>">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $row['id']; ?>">
                         <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -151,4 +151,4 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 </div>
 
 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>

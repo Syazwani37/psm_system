@@ -224,17 +224,17 @@ $result_logs = null;
             <div class="d-flex align-items-center gap-2 bg-white rounded-pill px-3 py-2 shadow-sm">
                 <div style="width: 40px; height: 40px; background: #E0F7FA; color: #006064; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700;">
                     <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo getInitials($userName); ?>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getInitials($userName); ?>
                 </div>
                 <div>
                     <div class="fw-bold small"><?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($userName); ?></div>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($userName); ?></div>
                     <div class="text-muted" style="font-size: 0.75rem;">Healthcare Specialist</div>
                 </div>
             </div>
         </div>
         <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/auth/logout.php" class="btn btn-outline-danger">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/auth/logout.php" class="btn btn-outline-danger">
             <i class="fas fa-sign-out-alt me-1"></i> Logout
         </a>
     </header>
@@ -248,7 +248,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
             <div>
                 <h2 class="mb-2" style="color: #00695C;">
                     Welcome, <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($userName); ?> 👋
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($userName); ?> 👋
                 </h2>
                 <p class="text-muted mb-3">Manage your patients and monitor their recovery progress.</p>
                 <span class="badge px-3 py-2" style="background: #B2DFDB; color: #004D40;">
@@ -263,7 +263,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($
         <!-- Patient Management -->
         <div class="col-md-6 col-lg-4">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/patient_management/index.php" class="feature-card d-block">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/patient_management/index.php" class="feature-card d-block">
                 <div class="feature-icon" style="background: #E3F2FD;">
                     <i class="fas fa-users-cog fa-lg" style="color: #1565C0;"></i>
                 </div>
@@ -278,7 +278,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Analytics -->
         <div class="col-md-6 col-lg-4">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/dashboard/analytics.php" class="feature-card d-block">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/dashboard/analytics.php" class="feature-card d-block">
                 <div class="feature-icon" style="background: #E0F7FA;">
                     <i class="fas fa-chart-pie fa-lg" style="color: #006064;"></i>
                 </div>
@@ -293,7 +293,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Resource Library -->
         <div class="col-md-6 col-lg-4">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/resources/library.php" class="feature-card d-block">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/resources/library.php" class="feature-card d-block">
                 <div class="feature-icon" style="background: #FFF3E0;">
                     <i class="fas fa-book-medical fa-lg" style="color: #EF6C00;"></i>
                 </div>
@@ -308,7 +308,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Communication -->
         <div class="col-md-6 col-lg-4">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/announcements/manage.php" class="feature-card d-block">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/announcements/manage.php" class="feature-card d-block">
                 <div class="feature-icon" style="background: #F3E5F5;">
                     <i class="fas fa-bullhorn fa-lg" style="color: #7B1FA2;"></i>
                 </div>
@@ -323,7 +323,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Consultation Requests -->
         <div class="col-md-6 col-lg-4">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/consultations/manage.php" class="feature-card d-block">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/consultations/manage.php" class="feature-card d-block">
                 <div class="feature-icon" style="background: #FFEBEE;">
                     <i class="fas fa-calendar-check fa-lg" style="color: #C62828;"></i>
                 </div>
@@ -497,7 +497,7 @@ function saveLogAction() {
     }
     
     fetch('<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/symptom_checker/save_log_action.php', {
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/symptom_checker/save_log_action.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -571,4 +571,4 @@ function showToast(message, type) {
 </script>
 
 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>

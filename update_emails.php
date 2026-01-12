@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 /**
  * Script to update expert emails to @gmail.com
  */

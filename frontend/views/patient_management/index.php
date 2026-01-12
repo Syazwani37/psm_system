@@ -60,7 +60,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
         <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -107,31 +107,31 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                 }
         ?>
             <div class="patient-card <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $cardStatusClass; ?>">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $cardStatusClass; ?>">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h5 class="mb-0 fw-bold" style="color: #00796B;">
                         <i class="fas fa-user-circle me-2"></i> <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($row['patient_name']); ?>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['patient_name']); ?>
                     </h5>
                     <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $statusBadge; ?>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $statusBadge; ?>
                 </div>
                 
                 <p class="text-secondary mb-2">
                     <strong class="text-dark">Week <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($row['week_postpartum']); ?>:</strong> 
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['week_postpartum']); ?>:</strong> 
                     <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($message); ?>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($message); ?>
                 </p>
                 
                 <small class="text-muted">
                     <i class="far fa-clock me-1"></i> Last Updated: <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo formatDateTime($row['created_at']); ?>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo formatDateTime($row['created_at']); ?>
                 </small>
                 
                 <div class="mt-3 pt-3 border-top d-flex gap-2">
                     <a href="history.php?patient_id=<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $row['user_id']; ?>" class="btn btn-sm btn-outline-primary rounded-pill w-100">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $row['user_id']; ?>" class="btn btn-sm btn-outline-primary rounded-pill w-100">
                         <i class="fas fa-history me-1"></i> View History
                     </a>
                 </div>
@@ -151,6 +151,6 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 </div>
 
 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

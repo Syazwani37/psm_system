@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Common Header
  * Includes Bootstrap 5, Font Awesome, Google Fonts, and Custom CSS
@@ -21,7 +22,8 @@ require_once BASE_PATH . '/backend/helpers/functions.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="PSM System - Mother and Baby Health Management">
-    <title><?php echo $page_title ?? 'PSM System'; ?></title>
+    <title><?php
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo $page_title ?? 'PSM System'; ?></title>
     
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -33,6 +35,7 @@ require_once BASE_PATH . '/backend/helpers/functions.php';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/frontend/assets/css/style.css">
+    <link rel="stylesheet" href="<?php
+require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/assets/css/style.css">
 </head>
 <body>

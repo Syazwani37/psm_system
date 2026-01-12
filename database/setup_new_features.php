@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 2) . '/backend/config/database.php';
 // database/setup_new_features.php
 require_once '../config/db_connect.php';
 

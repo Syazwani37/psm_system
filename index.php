@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 /**
  * PSM System - Entry Point
  */

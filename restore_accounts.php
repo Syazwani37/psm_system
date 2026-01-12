@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 // restore_accounts.php
 require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 
@@ -47,6 +48,7 @@ function restoreUser($conn, $name, $email, $password, $role) {
     <h1>Restoring Default Accounts...</h1>
 
     <?php
+require_once dirname(__FILE__, 1) . '/backend/config/database.php';
     // 1. Restore Mother
     restoreUser($conn, 'Mother Demo', 'mother@gmail.com', '12345', 'mother');
 

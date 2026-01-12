@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Helper Functions
  * Utility functions used across the application

@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 3) . '/backend/config/database.php';
 /**
  * PSM System - Authentication Check
  * Include this file at the top of protected pages

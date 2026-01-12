@@ -92,7 +92,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
         <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -121,14 +121,14 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                 $link = BASE_URL . $row['file_path'];
                 ?>
                 <div class="article-card" onclick="window.open('<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $link; ?>', '_blank')">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $link; ?>', '_blank')">
                     <div class="article-icon"><i class="fas <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $icon; ?>"></i></div>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $icon; ?>"></i></div>
                     <div class="article-content">
                         <h3><?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($row['title']); ?></h3>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['title']); ?></h3>
                         <p><?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($row['description']); ?></p>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['description']); ?></p>
                         <div class="read-more">View Resource <i class="fas fa-external-link-alt"></i></div>
                     </div>
                 </div>
@@ -197,6 +197,6 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 </script>
 
 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

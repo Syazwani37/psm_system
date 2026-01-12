@@ -7,7 +7,6 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 
 $page_title = "Mother Dashboard - PSM System";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
-
 require_once BASE_PATH . '/backend/helpers/functions.php';
 
 // Require mother role
@@ -95,11 +94,9 @@ $userName = getUserName();
     <!-- Header -->
     <header class="d-flex justify-content-end align-items-center py-3 mb-3">
         <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/auth/logout.php" class="btn btn-outline-danger">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/auth/logout.php" class="btn btn-outline-danger">
             <i class="fas fa-sign-out-alt me-1"></i> Logout
         </a>
-    </header>
-
     </header>
 
     <!-- Welcome Card -->
@@ -111,7 +108,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
             <div>
                 <h2 class="mb-1" style="color: var(--primary-dark);">
                     Welcome, <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($userName); ?>! 👋
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($userName); ?>! 👋
                 </h2>
                 <p class="text-muted mb-2">Continue your recovery journey with us.</p>
                 <span class="badge" style="background: #F8BBD0; color: #880E4F;">
@@ -129,7 +126,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($
 
     <!-- Primary Feature: Symptom Checker -->
     <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/symptom_checker/index.php" class="feature-card mb-4" style="border: 1px solid #FFEBEE;">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/symptom_checker/index.php" class="feature-card mb-4" style="border: 1px solid #FFEBEE;">
         <div class="d-flex align-items-center gap-3">
             <div class="feature-icon" style="background: #FFEBEE;">
                 <i class="fas fa-stethoscope fa-lg" style="color: #D32F2F;"></i>
@@ -149,7 +146,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Recovery Tracker -->
         <div class="col-6 col-md-4 col-lg-3">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/recovery/index.php" class="feature-card">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/recovery/index.php" class="feature-card">
                 <div class="feature-icon" style="background: #E8F5E9;">
                     <i class="fas fa-chart-line" style="color: #2E7D32;"></i>
                 </div>
@@ -164,7 +161,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Nutrition Plans -->
         <div class="col-6 col-md-4 col-lg-3">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/nutrition/index.php" class="feature-card">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/nutrition/index.php" class="feature-card">
                 <div class="feature-icon" style="background: #FFF3E0;">
                     <i class="fas fa-apple-alt" style="color: #EF6C00;"></i>
                 </div>
@@ -179,7 +176,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Consultations -->
         <div class="col-6 col-md-4 col-lg-3">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/consultations/book.php" class="feature-card">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/consultations/book.php" class="feature-card">
                 <div class="feature-icon" style="background: #E3F2FD;">
                     <i class="fas fa-user-md" style="color: #1565C0;"></i>
                 </div>
@@ -194,7 +191,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Community -->
         <div class="col-6 col-md-4 col-lg-3">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/community/index.php" class="feature-card">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/community/index.php" class="feature-card">
                 <div class="feature-icon" style="background: #F3E5F5;">
                     <i class="fas fa-users" style="color: #7B1FA2;"></i>
                 </div>
@@ -209,7 +206,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Articles & Tips -->
         <div class="col-6 col-md-4 col-lg-3">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/resources/articles.php" class="feature-card">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/resources/articles.php" class="feature-card">
                 <div class="feature-icon" style="background: #FFF8E1;">
                     <i class="fas fa-book-open" style="color: #FF8F00;"></i>
                 </div>
@@ -224,7 +221,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Mental Check -->
         <div class="col-6 col-md-4 col-lg-3">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/mental_health/epds_screening.php" class="feature-card">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/mental_health/epds_screening.php" class="feature-card">
                 <div class="feature-icon" style="background: #FCE4EC;">
                     <i class="fas fa-heartbeat" style="color: #F06292;"></i>
                 </div>
@@ -239,7 +236,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Baby Growth -->
         <div class="col-6 col-md-4 col-lg-3">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/baby_growth/index.php" class="feature-card">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/baby_growth/index.php" class="feature-card">
                 <div class="feature-icon" style="background: #EDE7F6;">
                     <i class="fas fa-baby" style="color: #7E57C2;"></i>
                 </div>
@@ -254,7 +251,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         <!-- Mom's Journal -->
         <div class="col-6 col-md-4 col-lg-3">
             <a href="<?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/journal/index.php" class="feature-card">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/journal/index.php" class="feature-card">
                 <div class="feature-icon" style="background: #FFF3E0;">
                     <i class="fas fa-journal-whills" style="color: #FF9800;"></i>
                 </div>
@@ -282,11 +279,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                 
                 // Shuffle and pick 3
                 if (isset($daily_tips_data) && is_array($daily_tips_data)) {
-                    // Seed the random number generator with the day of the year so it stays same for the day
-                    // srand(date('z') + date('Y')); 
-                    // actually user prefers fresh feel "every time she logs in", so true random is better
                     shuffle($daily_tips_data); 
-                    
                     $todays_tips = array_slice($daily_tips_data, 0, 3);
                     
                     foreach ($todays_tips as $tip) {
@@ -294,16 +287,16 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                         <div class="col-md-4">
                             <div class="d-flex gap-3 align-items-start h-100 p-2 rounded-3 hover-bg" style="transition: background 0.2s;">
                                 <div style="background: <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $tip['color_bg']; ?>; padding: 0.6rem; border-radius: 12px; color: <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $tip['color_text']; ?>; min-width: 45px; text-align: center;">
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $tip['color_bg']; ?>; padding: 0.6rem; border-radius: 12px; color: <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $tip['color_text']; ?>; min-width: 45px; text-align: center;">
                                     <i class="fas <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $tip['icon']; ?>"></i>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $tip['icon']; ?>"></i>
                                 </div>
                                 <div>
                                     <h6 class="mb-1 fw-bold text-dark"><?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $tip['title']; ?></h6>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $tip['title']; ?></h6>
                                     <p class="text-secondary small mb-0" style="font-size: 0.85rem; line-height: 1.4;"><?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $tip['text']; ?></p>
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $tip['text']; ?></p>
                                 </div>
                             </div>
                         </div>
@@ -312,7 +305,6 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                     }
                 }
             } else {
-                // Fallback static if file missing
                 echo '<p class="text-muted">Stay hydrated and rested!</p>';
             }
             ?>
@@ -321,6 +313,4 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 </div>
 
 <?php
-require_once dirname(__DIR__, 3) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
-
-
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>

@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Book Consultation
  * Frontend View: Consultations Module
@@ -208,7 +209,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
-        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -305,7 +307,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
         const newBooking = {
             doctor: doctor,
             date: date, // Simplified
-            patientName: "<?php echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Mother'; ?>", // Use PHP session name if available
+            patientName: "<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Mother'; ?>", // Use PHP session name if available
             status: 'pending'
         };
 
@@ -337,6 +340,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     }
 </script>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 
