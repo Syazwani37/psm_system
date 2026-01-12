@@ -1,6 +1,6 @@
 <?php
 /**
- * PSM System - Database Importer (V3)
+ * PSM System - Database Importer (V4 - Robust Accounts)
  */
 require_once __DIR__ . '/backend/config/database.php';
 
@@ -14,7 +14,7 @@ if (!file_exists($sqlFile)) {
 
 $sql = file_get_contents($sqlFile);
 
-// Cleanup SQL: Buang 'CREATE DATABASE' and 'USE' supaya dia masuk dalam database 'railway'
+// Cleanup SQL: Buang 'CREATE DATABASE' and 'USE'
 $sql = preg_replace('/CREATE DATABASE IF NOT EXISTS.*;/i', '', $sql);
 $sql = preg_replace('/USE .*;/i', '', $sql);
 
@@ -22,34 +22,38 @@ echo "<p>Starting migration into database: <strong>" . getenv('MYSQLDATABASE') .
 
 // Execute multiple queries
 if (mysqli_multi_query($conn, $sql)) {
-    $count = 0;
     do {
-        // Clear results
         if ($result = mysqli_store_result($conn)) {
             mysqli_free_result($result);
         }
-        $count++;
     } while (mysqli_next_result($conn));
     
-    echo "<p style='color: green;'>✅ Migration Result: Successfully executed queries.</p>";
+    echo "<p style='color: green;'>✅ Tables created/checked.</p>";
 
-    // Tambah test users kalau takde
-    echo "<p>Checking for test users...</p>";
-    $checkUser = mysqli_query($conn, "SELECT id FROM users LIMIT 1");
-    if (mysqli_num_rows($checkUser) == 0) {
-        $insertUsers = "
-            INSERT INTO users (name, email, password, role) VALUES 
-            ('Test Mother', 'mother@example.com', 'password123', 'mother'),
-            ('Dr. Hanan', 'hanan@example.com', 'password123', 'professional'),
-            ('Dr. Izzah', 'izzah@example.com', 'password123', 'professional'),
-            ('Dr. Fara', 'fara@example.com', 'password123', 'professional'),
-            ('Test Admin', 'admin@example.com', 'password123', 'admin');
-        ";
-        if (mysqli_query($conn, $insertUsers)) {
-            echo "<p style='color: blue;'>✅ Test users created: Dr. Hanan, Dr. Izzah, and Dr. Fara are ready.</p>";
+    // Logic baru: Check & Insert satu per satu kalau takde
+    $testUsers = [
+        ['name' => 'Dr. Hanan', 'email' => 'hanan@example.com', 'pass' => 'password123', 'role' => 'professional'],
+        ['name' => 'Dr. Izzah', 'email' => 'izzah@example.com', 'pass' => 'password123', 'role' => 'professional'],
+        ['name' => 'Dr. Fara', 'email' => 'fara@example.com', 'pass' => 'password123', 'role' => 'professional'],
+        ['name' => 'Test Mother', 'email' => 'mother@example.com', 'pass' => 'password123', 'role' => 'mother'],
+        ['name' => 'Test Admin', 'email' => 'admin@example.com', 'pass' => 'password123', 'role' => 'admin']
+    ];
+
+    foreach ($testUsers as $user) {
+        $email = $user['email'];
+        $check = mysqli_query($conn, "SELECT id FROM users WHERE email = '$email'");
+        if (mysqli_num_rows($check) == 0) {
+            $name = $user['name'];
+            $pass = $user['pass'];
+            $role = $user['role'];
+            mysqli_query($conn, "INSERT INTO users (name, email, password, role) VALUES ('$name', '$email', '$pass', '$role')");
+            echo "<li>✅ Created account: <strong>$email</strong> ($name)</li>";
+        } else {
+            echo "<li>ℹ️ Account already exists: <strong>$email</strong></li>";
         }
     }
 
+    echo "<p style='color: blue; margin-top: 20px;'><strong>All accounts are ready!</strong></p>";
     echo "<p><a href='frontend/views/auth/login.php'>Go to Login Page</a></p>";
 
 } else {
