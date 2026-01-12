@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Recovery Trends Report
  * Frontend View: Reports Module
@@ -6,7 +7,7 @@
 
 $page_title = "Recovery Trends - PSM System";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
-require_once BASE_PATH . '/backend/config/database.php';
+
 requireLogin('admin');
 require_once BASE_PATH . '/backend/includes/header.php';
 ?>
@@ -85,7 +86,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
-        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -99,6 +101,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     <!-- Report Content -->
     <div class="report-content">
         <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
         // Fetch real metrics
         $avg_temp = 0;
         $high_pain_count = 0;
@@ -128,22 +131,26 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
         <div class="report-item">
             <span class="report-label">Average Body Temperature</span>
-            <span class="report-value"><?php echo $avg_temp > 0 ? $avg_temp . '°C' : 'No Data'; ?></span>
+            <span class="report-value"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $avg_temp > 0 ? $avg_temp . '°C' : 'No Data'; ?></span>
         </div>
 
         <div class="report-item">
             <span class="report-label">Patients Reporting High Pain (>3)</span>
-            <span class="report-value"><?php echo $pain_percentage; ?>%</span>
+            <span class="report-value"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $pain_percentage; ?>%</span>
         </div>
 
         <div class="report-item">
             <span class="report-label">Fatigue/Tiredness Reported</span>
-            <span class="report-value"><?php echo $tired_percentage; ?>%</span>
+            <span class="report-value"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $tired_percentage; ?>%</span>
         </div>
 
         <div class="report-item">
             <span class="report-label">Total Logs Analyzed</span>
-            <span class="report-value"><?php echo $total_logs; ?></span>
+            <span class="report-value"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $total_logs; ?></span>
         </div>
     </div>
 
@@ -160,6 +167,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     }
 </script>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Save Professional Action on Symptom Log
  * API Endpoint: POST /backend/api/symptom_checker/save_log_action.php
@@ -6,7 +7,7 @@
 
 header('Content-Type: application/json');
 
-require_once BASE_PATH . '/backend/config/database.php';
+
 require_once BASE_PATH . '/backend/includes/auth_check.php';
 
 // Ensure user is logged in as professional

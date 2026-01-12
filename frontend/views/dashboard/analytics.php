@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Analytics Dashboard
  * Frontend View: Dashboard Module
@@ -6,7 +7,7 @@
 
 $page_title = "Analytics - PSM System";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
-require_once BASE_PATH . '/backend/config/database.php';
+
 
 requireLogin('professional');
 
@@ -67,7 +68,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
 <div class="container py-5" style="max-width: 900px;">
     <div class="d-flex align-items-center mb-5">
-        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -138,7 +140,10 @@ require_once BASE_PATH . '/backend/includes/header.php';
             labels: ['Stable', 'Monitoring', 'Critical'],
             datasets: [{
                 label: 'Patients',
-                data: [<?php echo $safe_count; ?>, <?php echo $warning_count; ?>, <?php echo $danger_count; ?>],
+                data: [<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $safe_count; ?>, <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $warning_count; ?>, <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $danger_count; ?>],
                 backgroundColor: ['#6B8E6B', '#E8D5B5', '#C62828'],
                 borderRadius: 8,
                 barThickness: 40
@@ -154,6 +159,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     });
 </script>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

@@ -1,11 +1,12 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Login Page
  * Frontend View: Auth Module
  */
 
 $page_title = "Login - PSM System";
-require_once BASE_PATH . '/backend/config/database.php';
+
 require_once BASE_PATH . '/backend/helpers/functions.php';
 require_once BASE_PATH . '/backend/includes/auth_check.php';
 require_once BASE_PATH . '/backend/includes/header.php';
@@ -38,7 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <style>
     body {
-        background: url('<?php echo BASE_URL; ?>/frontend/assets/images/mom_and_baby_background.jpg') no-repeat center center/cover;
+        background: url('<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/assets/images/mom_and_baby_background.jpg') no-repeat center center/cover;
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -143,12 +145,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p class="text-muted mb-0">Please log in to continue</p>
         </div>
 
-        <?php if ($error): ?>
+        <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if ($error): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i><?php echo $error; ?>
+                <i class="fas fa-exclamation-circle me-2"></i><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $error; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        <?php endif; ?>
+        <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
 
         <form method="POST" action="">
             <div class="mb-3">
@@ -181,6 +186,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

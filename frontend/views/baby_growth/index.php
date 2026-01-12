@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Baby Growth Tracker
  * Frontend View: Baby Growth Module
@@ -6,7 +7,7 @@
 
 $page_title = "Baby Growth Tracker - PSM System";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
-require_once BASE_PATH . '/backend/config/database.php';
+
 require_once BASE_PATH . '/backend/helpers/functions.php';
 
 requireLogin('mother');
@@ -124,13 +125,15 @@ require_once BASE_PATH . '/backend/includes/header.php';
 <div class="container py-5" style="max-width: 1000px;">
     <!-- Header -->
     <div class="d-flex align-items-center mb-4">
-        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h2 class="mb-0" style="font-family: 'Playfair Display', serif; color: #4A148C;">Baby Growth & Milestones</h2>
     </div>
 
-    <?php displayFlashMessage(); ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlashMessage(); ?>
 
     <div class="row g-4">
         <!-- Growth Entry Form -->
@@ -148,7 +151,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
                         
                         <div class="mb-3">
                             <label class="form-label text-muted small fw-bold">Date</label>
-                            <input type="date" name="date" class="form-control" required value="<?php echo date('Y-m-d'); ?>">
+                            <input type="date" name="date" class="form-control" required value="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('Y-m-d'); ?>">
                         </div>
                         
                         <div class="row">
@@ -188,6 +192,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
                     
                     <div style="max-height: 320px; overflow-y: auto;">
                         <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                         $milestones_list = [
                             '1m_smile' => 'Smiles at people',
                             '1m_head' => 'Can hold head up briefly',
@@ -205,16 +210,22 @@ require_once BASE_PATH . '/backend/includes/header.php';
                         <div class="milestone-item">
                             <form method="POST" class="d-flex w-100 align-items-center m-0">
                                 <input type="hidden" name="toggle_milestone" value="1">
-                                <input type="hidden" name="milestone_id" value="<?php echo $id; ?>">
-                                <input type="hidden" name="milestone_name" value="<?php echo $name; ?>">
-                                <input type="checkbox" class="milestone-check" onchange="this.form.submit()" <?php echo $is_done ? 'checked' : ''; ?>>
-                                <span class="milestone-label <?php echo $is_done ? 'done' : ''; ?>" 
+                                <input type="hidden" name="milestone_id" value="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $id; ?>">
+                                <input type="hidden" name="milestone_name" value="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $name; ?>">
+                                <input type="checkbox" class="milestone-check" onchange="this.form.submit()" <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $is_done ? 'checked' : ''; ?>>
+                                <span class="milestone-label <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $is_done ? 'done' : ''; ?>" 
                                       onclick="this.previousElementSibling.click()">
-                                    <?php echo $name; ?>
+                                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $name; ?>
                                 </span>
                             </form>
                         </div>
-                        <?php endforeach; ?>
+                        <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -243,17 +254,20 @@ require_once BASE_PATH . '/backend/includes/header.php';
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: <?php echo json_encode($dates); ?>,
+            labels: <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_encode($dates); ?>,
             datasets: [{
                 label: 'Weight (kg)',
-                data: <?php echo json_encode($weights); ?>,
+                data: <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_encode($weights); ?>,
                 borderColor: '#9575CD',
                 backgroundColor: 'rgba(149, 117, 205, 0.1)',
                 fill: true,
                 tension: 0.4
             }, {
                 label: 'Height (cm)',
-                data: <?php echo json_encode($heights); ?>,
+                data: <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_encode($heights); ?>,
                 borderColor: '#26C6DA',
                 borderDash: [5, 5],
                 fill: false,
@@ -273,6 +287,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     });
 </script>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

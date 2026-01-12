@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Admin Dashboard
  * Frontend View: Dashboard Module
@@ -6,7 +7,7 @@
 
 $page_title = "Admin Dashboard - PSM System";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
-require_once BASE_PATH . '/backend/config/database.php';
+
 require_once BASE_PATH . '/backend/helpers/functions.php';
 
 // Require admin role
@@ -243,7 +244,8 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
                 <div class="text-muted" style="font-size: 0.75rem;">Administrator</div>
             </div>
         </div>
-        <a href="<?php echo BASE_URL; ?>/frontend/views/auth/logout.php" class="btn btn-outline-danger">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/auth/logout.php" class="btn btn-outline-danger">
             <i class="fas fa-sign-out-alt me-1"></i> Logout
         </a>
     </header>
@@ -256,7 +258,8 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
             </div>
             <div>
                 <h2 class="mb-2" style="color: #4A148C;">
-                    Welcome, <?php echo escape($userName); ?> 👋
+                    Welcome, <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($userName); ?> 👋
                 </h2>
                 <p class="text-muted mb-3">Overview of system performance and health metrics.</p>
                 <span class="badge px-3 py-2" style="background: #E1BEE7; color: #4A148C;">
@@ -276,7 +279,8 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
                     </div>
                     <span class="badge bg-success-subtle text-success">Active</span>
                 </div>
-                <div class="stat-number"><?php echo $stats['mothers']; ?></div>
+                <div class="stat-number"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats['mothers']; ?></div>
                 <div class="text-muted">Total Mothers</div>
             </div>
         </div>
@@ -289,7 +293,8 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
                     </div>
                     <span class="badge bg-success-subtle text-success">Active</span>
                 </div>
-                <div class="stat-number"><?php echo $stats['professionals']; ?></div>
+                <div class="stat-number"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats['professionals']; ?></div>
                 <div class="text-muted">Professionals</div>
             </div>
         </div>
@@ -302,7 +307,8 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
                     </div>
                     <span class="badge bg-info-subtle text-info">Logged</span>
                 </div>
-                <div class="stat-number"><?php echo $stats['symptom_logs']; ?></div>
+                <div class="stat-number"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats['symptom_logs']; ?></div>
                 <div class="text-muted">Symptom Logs</div>
             </div>
         </div>
@@ -315,7 +321,8 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
                     </div>
                     <span class="badge bg-warning-subtle text-warning">Pending</span>
                 </div>
-                <div class="stat-number"><?php echo $stats['pending_consultations']; ?></div>
+                <div class="stat-number"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats['pending_consultations']; ?></div>
                 <div class="text-muted">Pending Consultations</div>
             </div>
         </div>
@@ -327,7 +334,8 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
         <div class="col-lg-8">
             <h5 class="mb-3">Recent Reports</h5>
             <div class="d-flex flex-column gap-3">
-                <a href="<?php echo BASE_URL; ?>/frontend/views/reports/recovery_trends.php" class="report-card text-decoration-none">
+                <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/reports/recovery_trends.php" class="report-card text-decoration-none">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex gap-3 align-items-center">
                             <div style="width: 50px; height: 50px; background: #F3E5F5; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #9C27B0;">
@@ -335,14 +343,16 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
                             </div>
                             <div>
                                 <h6 class="mb-1 text-dark">Weekly Recovery Trends</h6>
-                                <small class="text-muted"><?php echo $txt_recovery_update; ?></small>
+                                <small class="text-muted"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $txt_recovery_update; ?></small>
                             </div>
                         </div>
                         <button class="btn btn-outline-secondary btn-sm">View Report</button>
                     </div>
                 </a>
 
-                <a href="<?php echo BASE_URL; ?>/frontend/views/reports/user_engagement.php" class="report-card text-decoration-none">
+                <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/reports/user_engagement.php" class="report-card text-decoration-none">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex gap-3 align-items-center">
                             <div style="width: 50px; height: 50px; background: #E3F2FD; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1E88E5;">
@@ -350,14 +360,16 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
                             </div>
                             <div>
                                 <h6 class="mb-1 text-dark">User Engagement Metrics</h6>
-                                <small class="text-muted"><?php echo $txt_user_update; ?></small>
+                                <small class="text-muted"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $txt_user_update; ?></small>
                             </div>
                         </div>
                         <button class="btn btn-outline-secondary btn-sm">View Report</button>
                     </div>
                 </a>
 
-                <a href="<?php echo BASE_URL; ?>/frontend/views/reports/nutrition.php" class="report-card text-decoration-none">
+                <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/reports/nutrition.php" class="report-card text-decoration-none">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex gap-3 align-items-center">
                             <div style="width: 50px; height: 50px; background: #E8F5E9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #43A047;">
@@ -365,7 +377,8 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
                             </div>
                             <div>
                                 <h6 class="mb-1 text-dark">Nutrition Adherence</h6>
-                                <small class="text-muted"><?php echo $txt_nutrition_update; ?></small>
+                                <small class="text-muted"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $txt_nutrition_update; ?></small>
                             </div>
                         </div>
                         <button class="btn btn-primary btn-sm">Generate</button>
@@ -382,10 +395,13 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
             <h5 class="mb-3">Recent Activity</h5>
             <div class="card p-3">
                 <div class="d-flex flex-column gap-3">
-                    <?php if (empty($activity)): ?>
+                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if (empty($activity)): ?>
                         <p class="text-muted small mb-0">No recent activity.</p>
-                    <?php else: ?>
-                        <?php foreach($activity as $act): 
+                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; else: ?>
+                        <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; foreach($activity as $act): 
                             $isUser = ($act['type'] == 'user_register');
                             $color = $isUser ? 'var(--secondary-color)' : 'var(--primary-color)';
                             $title = $isUser ? 'New user registered' : 'Report submitted';
@@ -400,22 +416,29 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
                         ?>
                         <div class="d-flex gap-3">
                             <div class="pt-1">
-                                <div style="width: 10px; height: 10px; background: <?php echo $color; ?>; border-radius: 50%;"></div>
+                                <div style="width: 10px; height: 10px; background: <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $color; ?>; border-radius: 50%;"></div>
                             </div>
                             <div>
-                                <div class="fw-bold small"><?php echo $title; ?></div>
-                                <small class="text-muted"><?php echo $desc; ?></small>
-                                <div class="text-primary small mt-1"><?php echo $timeStr; ?></div>
+                                <div class="fw-bold small"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $title; ?></div>
+                                <small class="text-muted"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $desc; ?></small>
+                                <div class="text-primary small mt-1"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $timeStr; ?></div>
                             </div>
                         </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                        <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endforeach; ?>
+                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

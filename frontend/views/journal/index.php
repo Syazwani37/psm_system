@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Mom's Journal
  * Frontend View: Journal Module
@@ -6,7 +7,7 @@
 
 $page_title = "Mom's Journal - PSM System";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
-require_once BASE_PATH . '/backend/config/database.php';
+
 require_once BASE_PATH . '/backend/helpers/functions.php';
 
 requireLogin('mother');
@@ -135,27 +136,32 @@ require_once BASE_PATH . '/backend/includes/header.php';
 <div class="container py-5" style="max-width: 800px;">
     <!-- Header -->
     <div class="d-flex align-items-center mb-4">
-        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h2 class="mb-0" style="font-family: 'Playfair Display', serif;">My Journal</h2>
     </div>
 
-    <?php displayFlashMessage(); ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlashMessage(); ?>
 
     <!-- Analytics Summary -->
-    <?php if($dominant_mood): ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if($dominant_mood): ?>
     <div class="summary-banner">
         <div>
             <div style="font-size: 1rem; opacity: 0.9;">Your Dominant Mood</div>
             <div style="font-size: 2.5rem; font-weight: 700; line-height: 1.2;">
-                <?php echo ucfirst($dominant_mood); ?>
+                <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo ucfirst($dominant_mood); ?>
             </div>
             <div class="mt-2 text-white-50 small">Based on your recent entries</div>
         </div>
         <i class="fas fa-chart-pie" style="font-size: 4rem; opacity: 0.3;"></i>
     </div>
-    <?php endif; ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
 
     <!-- New Entry Form -->
     <div class="card border-0 shadow-sm mb-5" style="border-radius: 20px;">
@@ -208,15 +214,19 @@ require_once BASE_PATH . '/backend/includes/header.php';
     <!-- History -->
     <h5 class="mb-3 ps-2">Recent Entries</h5>
     
-    <?php if(empty($entries)): ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if(empty($entries)): ?>
         <div class="text-center py-5 text-muted">
             <i class="fas fa-book-open fa-3x mb-3 opacity-25"></i>
             <p>No journal entries yet. Start writing today!</p>
         </div>
-    <?php else: ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; else: ?>
         <div class="d-flex flex-column gap-3">
-            <?php foreach($entries as $e): ?>
-                <?php 
+            <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; foreach($entries as $e): ?>
+                <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; 
                 $mood = $e['mood'] ?? 'happy';
                 $icons = [
                     'happy' => 'fa-smile text-warning', 'calm' => 'fa-meh text-success', 
@@ -225,23 +235,31 @@ require_once BASE_PATH . '/backend/includes/header.php';
                 ];
                 $iconClass = $icons[$mood] ?? 'fa-circle text-muted';
                 ?>
-                <div class="card border-0 shadow-sm entry-card mood-<?php echo escape($mood); ?>" style="border-radius: 16px;">
+                <div class="card border-0 shadow-sm entry-card mood-<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($mood); ?>" style="border-radius: 16px;">
                     <div class="card-body p-3">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <small class="text-muted fw-bold">
-                                <?php echo formatDateTime($e['created_at']); ?>
+                                <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo formatDateTime($e['created_at']); ?>
                             </small>
-                            <i class="fas <?php echo $iconClass; ?> fa-lg" title="<?php echo ucfirst($mood); ?>"></i>
+                            <i class="fas <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $iconClass; ?> fa-lg" title="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo ucfirst($mood); ?>"></i>
                         </div>
-                        <p class="card-text mb-0" style="white-space: pre-wrap; color: #555;"><?php echo escape($e['entry_text']); ?></p>
+                        <p class="card-text mb-0" style="white-space: pre-wrap; color: #555;"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($e['entry_text']); ?></p>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endforeach; ?>
         </div>
-    <?php endif; ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
 
 </div>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Nutrition Adherence Report
  * Frontend View: Reports Module
@@ -6,7 +7,7 @@
 
 $page_title = "Nutrition Adherence - PSM System";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
-require_once BASE_PATH . '/backend/config/database.php';
+
 requireLogin('admin');
 require_once BASE_PATH . '/backend/includes/header.php';
 ?>
@@ -113,7 +114,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
 <div class="page-container">
     <div class="text-center mb-5">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/admin.php" class="btn btn-outline-secondary btn-sm mb-3">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/dashboard/admin.php" class="btn btn-outline-secondary btn-sm mb-3">
             <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
         </a>
         <h1 class="mb-2" style="font-family: 'Playfair Display', serif; color: #4A148C;">
@@ -124,6 +126,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
     <div class="report-card">
         <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
         // Calculate "Adherence" based on symptom log consistency
         // Logic: More logs = Higher adherence score (Gamified metric)
         $q = mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs");
@@ -144,18 +147,25 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
         <div class="section-title"><i class="fas fa-chart-bar"></i> Adherence Statistics</div>
         <ul class="report-list">
-            <li><i class="fas fa-check"></i> <strong>Calculated Adherence:</strong> <?php echo $adherence; ?>% (Based on log volume)</li>
-            <li><i class="fas fa-check"></i> <strong>Most Active Period:</strong> Week <?php echo $best_week_num; ?> Postpartum (<?php echo $best_week_val; ?>% of total logs)</li>
-            <li><i class="fas fa-check"></i> <strong>Total Data Points:</strong> <?php echo $count; ?> logs analyzed</li>
+            <li><i class="fas fa-check"></i> <strong>Calculated Adherence:</strong> <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $adherence; ?>% (Based on log volume)</li>
+            <li><i class="fas fa-check"></i> <strong>Most Active Period:</strong> Week <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $best_week_num; ?> Postpartum (<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $best_week_val; ?>% of total logs)</li>
+            <li><i class="fas fa-check"></i> <strong>Total Data Points:</strong> <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $count; ?> logs analyzed</li>
         </ul>
 
         <div class="percentage-bar">
-            <div class="percentage-fill" style="width: <?php echo $adherence; ?>%;"><?php echo $adherence; ?>% Avg</div>
+            <div class="percentage-fill" style="width: <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $adherence; ?>%;"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $adherence; ?>% Avg</div>
         </div>
 
         <div class="section-title"><i class="fas fa-lightbulb"></i> Recommendations</div>
         <ul class="report-list">
-            <li><i class="fas fa-check"></i> <strong>Status:</strong> <?php echo ($adherence > 70) ? 'Excellent engagement levels.' : 'Encourage more daily logging.'; ?></li>
+            <li><i class="fas fa-check"></i> <strong>Status:</strong> <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo ($adherence > 70) ? 'Excellent engagement levels.' : 'Encourage more daily logging.'; ?></li>
             <li><i class="fas fa-check"></i> Introduce weekly nutrition reminders via email</li>
             <li><i class="fas fa-check"></i> Integrate meal plan tracking into Recovery Tracker</li>
             <li><i class="fas fa-check"></i> Provide incentives for full-week adherence</li>
@@ -168,6 +178,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     </div>
 </div>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Resource Library
  * Frontend View: Resources Module (Professional)
@@ -105,7 +106,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
-        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -117,10 +119,12 @@ require_once BASE_PATH . '/backend/includes/header.php';
     </div>
 
     <!-- Flash Messages -->
-    <?php displayFlashMessage(); ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlashMessage(); ?>
 
     <!-- Professional Actions -->
-    <?php if ($_SESSION['role'] === 'professional'): ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if ($_SESSION['role'] === 'professional'): ?>
     <div class="mb-5 d-flex gap-3">
         <button class="btn btn-outline-danger rounded-pill py-3 flex-grow-1" onclick="openUploadModal('pdf')">
             <i class="fas fa-file-pdf fa-lg mb-1 d-block"></i> Upload PDF
@@ -129,11 +133,13 @@ require_once BASE_PATH . '/backend/includes/header.php';
             <i class="fas fa-file-word fa-lg mb-1 d-block"></i> Upload Document
         </button>
     </div>
-    <?php endif; ?>
+    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
 
     <div class="resource-grid">
         <?php
-        require_once BASE_PATH . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
+        
         
         $query = "SELECT * FROM resources ORDER BY created_at DESC";
         $result = mysqli_query($conn, $query);
@@ -158,25 +164,35 @@ require_once BASE_PATH . '/backend/includes/header.php';
                 }
                 ?>
                 <div class="resource-card">
-                    <div class="icon-box <?php echo $iconClass; ?>"><i class="fas <?php echo $icon; ?>"></i></div>
-                    <div class="resource-title"><?php echo escape($row['title']); ?></div>
-                    <div class="resource-desc"><?php echo escape($row['description']); ?></div>
+                    <div class="icon-box <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $iconClass; ?>"><i class="fas <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $icon; ?>"></i></div>
+                    <div class="resource-title"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['title']); ?></div>
+                    <div class="resource-desc"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['description']); ?></div>
                     
-                    <a href="<?php echo BASE_URL . $row['file_path']; ?>" class="download-btn mb-2" download>
+                    <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL . $row['file_path']; ?>" class="download-btn mb-2" download>
                         <i class="fas fa-download"></i> Download
                     </a>
 
                     <!-- Delete Option (Professional Only) -->
-                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'professional'): ?>
-                    <form action="<?php echo BASE_URL; ?>/backend/api/delete_resource.php" method="POST" class="w-100" onsubmit="return confirm('Are you sure you want to delete this resource?');">
-                        <input type="hidden" name="resource_id" value="<?php echo $row['id']; ?>">
+                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if (isset($_SESSION['role']) && $_SESSION['role'] === 'professional'): ?>
+                    <form action="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/delete_resource.php" method="POST" class="w-100" onsubmit="return confirm('Are you sure you want to delete this resource?');">
+                        <input type="hidden" name="resource_id" value="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $row['id']; ?>">
                         <button type="submit" class="btn btn-sm btn-outline-danger w-100 rounded-pill border-0" style="background: #FFEBEE; color: #D32F2F;">
                             <i class="fas fa-trash-alt me-1"></i> Delete
                         </button>
                     </form>
-                    <?php endif; ?>
+                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
                 </div>
                 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
             }
         } else {
             echo '<div class="col-12 text-center text-muted py-5">No resources found. Upload one to get started!</div>';
@@ -194,7 +210,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
-                <form action="<?php echo BASE_URL; ?>/backend/api/upload_resource.php" method="POST" enctype="multipart/form-data">
+                <form action="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/upload_resource.php" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label class="form-label text-muted small fw-bold">Title</label>
                         <input type="text" name="title" class="form-control" required placeholder="e.g. Weekly Nutrition Plan">
@@ -260,6 +277,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     }
 </script>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

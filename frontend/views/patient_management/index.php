@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Patient Management
  * Frontend View: Patient Management Module
@@ -6,7 +7,7 @@
 
 $page_title = "Patient Management - PSM System";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
-require_once BASE_PATH . '/backend/config/database.php';
+
 require_once BASE_PATH . '/backend/helpers/functions.php';
 
 requireLogin('professional');
@@ -58,7 +59,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
-        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -71,6 +73,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
     <div class="d-flex flex-column gap-3">
         <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
         // Fetch latest log for each patient using correlated subquery logic (or MAX ID logic)
         $sql = "SELECT s.*, u.name as patient_name 
                 FROM symptom_logs s 
@@ -103,30 +106,38 @@ require_once BASE_PATH . '/backend/includes/header.php';
                     $cardStatusClass = 'status-safe';
                 }
         ?>
-            <div class="patient-card <?php echo $cardStatusClass; ?>">
+            <div class="patient-card <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $cardStatusClass; ?>">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h5 class="mb-0 fw-bold" style="color: #00796B;">
-                        <i class="fas fa-user-circle me-2"></i> <?php echo escape($row['patient_name']); ?>
+                        <i class="fas fa-user-circle me-2"></i> <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['patient_name']); ?>
                     </h5>
-                    <?php echo $statusBadge; ?>
+                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $statusBadge; ?>
                 </div>
                 
                 <p class="text-secondary mb-2">
-                    <strong class="text-dark">Week <?php echo escape($row['week_postpartum']); ?>:</strong> 
-                    <?php echo escape($message); ?>
+                    <strong class="text-dark">Week <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['week_postpartum']); ?>:</strong> 
+                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($message); ?>
                 </p>
                 
                 <small class="text-muted">
-                    <i class="far fa-clock me-1"></i> Last Updated: <?php echo formatDateTime($row['created_at']); ?>
+                    <i class="far fa-clock me-1"></i> Last Updated: <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo formatDateTime($row['created_at']); ?>
                 </small>
                 
                 <div class="mt-3 pt-3 border-top d-flex gap-2">
-                    <a href="history.php?patient_id=<?php echo $row['user_id']; ?>" class="btn btn-sm btn-outline-primary rounded-pill w-100">
+                    <a href="history.php?patient_id=<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $row['user_id']; ?>" class="btn btn-sm btn-outline-primary rounded-pill w-100">
                         <i class="fas fa-history me-1"></i> View History
                     </a>
                 </div>
             </div>
         <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
             }
         } else {
             echo '
@@ -139,6 +150,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     </div>
 </div>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
 
 

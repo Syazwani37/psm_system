@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Manage Announcements
  * Frontend View: Announcements Module
@@ -6,7 +7,7 @@
 
 $page_title = "Manage Announcements - PSM System";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
-require_once BASE_PATH . '/backend/config/database.php';
+
 require_once BASE_PATH . '/backend/helpers/functions.php';
 
 requireLogin('professional');
@@ -49,7 +50,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
-        <a href="<?php echo BASE_URL; ?>/frontend/views/dashboard/professional.php" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+        <a href="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/dashboard/professional.php" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -63,7 +65,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
     <!-- Create Announcement Form -->
     <div class="form-card">
         <h5 class="mb-4">📢 Post New Announcement</h5>
-        <form action="<?php echo BASE_URL; ?>/backend/api/announcements/create.php" method="POST">
+        <form action="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/announcements/create.php" method="POST">
             <div class="mb-3">
                 <label class="form-label">Title</label>
                 <input type="text" name="title" class="form-control" placeholder="e.g., Flu Season Warning" required>
@@ -103,6 +106,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     <h5 class="mb-3">Active Announcements</h5>
     <div class="d-flex flex-column gap-2">
         <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
         $sql = "SELECT * FROM announcements ORDER BY created_at DESC";
         $result = $conn->query($sql);
 
@@ -116,20 +120,28 @@ require_once BASE_PATH . '/backend/includes/header.php';
                 <div class="announcement-card">
                     <div>
                         <div class="d-flex align-items-center gap-2 mb-1">
-                            <span class="badge <?php echo $typeClass; ?> rounded-pill" style="font-size: 0.7rem;"><?php echo strtoupper($row['type']); ?></span>
-                            <span class="text-muted small"><?php echo date('M d, Y h:i A', strtotime($row['created_at'])); ?></span>
+                            <span class="badge <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $typeClass; ?> rounded-pill" style="font-size: 0.7rem;"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo strtoupper($row['type']); ?></span>
+                            <span class="text-muted small"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('M d, Y h:i A', strtotime($row['created_at'])); ?></span>
                         </div>
-                        <h6 class="mb-1 fw-bold"><?php echo escape($row['title']); ?></h6>
-                        <p class="text-secondary small mb-0"><?php echo escape($row['message']); ?></p>
+                        <h6 class="mb-1 fw-bold"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['title']); ?></h6>
+                        <p class="text-secondary small mb-0"><?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($row['message']); ?></p>
                     </div>
-                    <form action="<?php echo BASE_URL; ?>/backend/api/announcements/delete.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this?');">
-                        <input type="hidden" name="announcement_id" value="<?php echo $row['id']; ?>">
+                    <form action="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/backend/api/announcements/delete.php" method="POST" onsubmit="return confirm('Are you sure you want to delete this?');">
+                        <input type="hidden" name="announcement_id" value="<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $row['id']; ?>">
                         <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-trash"></i>
                         </button>
                     </form>
                 </div>
                 <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
             }
         } else {
             echo '<p class="text-muted text-center py-4">No active announcements.</p>';
@@ -138,4 +150,5 @@ require_once BASE_PATH . '/backend/includes/header.php';
     </div>
 </div>
 
-<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>

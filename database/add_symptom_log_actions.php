@@ -1,11 +1,12 @@
 <?php
+require_once dirname(__FILE__, 2) . '/backend/config/database.php';
 /**
  * PSM System - Database Migration
  * Add professional action columns to symptom_logs table
  * Run once: http://localhost/psm_system/database/add_symptom_log_actions.php
  */
 
-require_once BASE_PATH . '/backend/config/database.php';
+
 
 echo "<h2>PSM System - Adding Symptom Log Action Columns</h2>";
 
