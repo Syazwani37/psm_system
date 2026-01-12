@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/backend/config/database.php';
+require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 
 $result = mysqli_query($conn, "SHOW COLUMNS FROM users");
 while ($row = mysqli_fetch_assoc($result)) {

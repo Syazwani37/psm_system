@@ -2,7 +2,7 @@
 /**
  * PSM System - Database Importer (V2)
  */
-require_once __DIR__ . '/backend/config/database.php';
+require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 
 echo "<h2>PSM System - Database Importer</h2>";
 

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/backend/config/database.php';
+require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 
 echo "<h1>Database Check: Resources</h1>";
 

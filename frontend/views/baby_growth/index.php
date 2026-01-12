@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Baby Growth Tracker
  * Frontend View: Baby Growth Module
@@ -192,7 +192,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo date('Y-
                     
                     <div style="max-height: 320px; overflow-y: auto;">
                         <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                         $milestones_list = [
                             '1m_smile' => 'Smiles at people',
                             '1m_head' => 'Can hold head up briefly',

@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 echo "<h1>Debug Info</h1>";
 echo "PHP Version: " . phpversion() . "<br>";
 
-require_once __DIR__ . '/backend/config/database.php';
+require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 echo "Database included.<br>";
 
 require_once 'backend/helpers/functions.php';

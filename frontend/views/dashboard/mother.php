@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Mother Dashboard
  * Frontend View: Dashboard Module
@@ -274,7 +274,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
         </h5>
         <div class="row g-3">
             <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
             // Include tips data
             $tips_file = BASE_PATH . '/backend/data/tips_data.php';
             if (file_exists($tips_file)) {
@@ -308,7 +308,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $tip['te
                             </div>
                         </div>
                         <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                     }
                 }
             } else {

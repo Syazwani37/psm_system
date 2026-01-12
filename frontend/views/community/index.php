@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Community Support
  * Frontend View: Community Module
@@ -174,7 +174,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo getDashb
 
     <!-- Official Announcements -->
     <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
      // Ensure DB is available
     $ann_sql = "SELECT title, message, type, created_at FROM announcements ORDER BY created_at DESC LIMIT 3";
     $ann_result = $conn->query($ann_sql);
@@ -184,7 +184,7 @@ require_once dirname(__FILE__, 3) . '/backend/config/database.php';
         <div class="mb-4 text-start">
             <h5 class="mb-3 text-secondary"><i class="fas fa-bullhorn me-2"></i>Official Updates</h5>
             <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
             while ($ann = $ann_result->fetch_assoc()) {
                 $alertClass = 'alert-info';
                 $icon = 'fa-info-circle';
@@ -207,12 +207,12 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo date('M 
                     </div>
                 </div>
                 <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
             }
             ?>
         </div>
         <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
     }
     ?>
 

@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Admin Dashboard
  * Frontend View: Dashboard Module

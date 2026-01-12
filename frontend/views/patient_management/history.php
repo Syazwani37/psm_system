@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Patient History
  * Frontend View: Patient History Log
@@ -79,7 +79,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($
                 </thead>
                 <tbody>
                     <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                     $stmt = $conn->prepare("SELECT * FROM symptom_logs WHERE user_id = ? ORDER BY created_at DESC");
                     $stmt->bind_param("i", $patient_id);
                     $stmt->execute();
@@ -115,7 +115,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo escape($
 require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo $statusBadge; ?></td>
                             </tr>
                             <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                         }
                     } else {
                         echo '<tr><td colspan="4" class="text-center py-5 text-muted">No history found for this patient.</td></tr>';

@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - User Engagement Report
  * Frontend View: Reports Module
@@ -83,7 +83,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo getDashb
     <div class="report-card">
         <div>
             <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
             // Fetch real user stats
             $users_res = mysqli_query($conn, "SELECT role, COUNT(*) as c FROM users GROUP BY role");
             $roles = [];

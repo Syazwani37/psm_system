@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Recovery Trends Report
  * Frontend View: Reports Module
@@ -101,7 +101,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo getDashb
     <!-- Report Content -->
     <div class="report-content">
         <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
         // Fetch real metrics
         $avg_temp = 0;
         $high_pain_count = 0;

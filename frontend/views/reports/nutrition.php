@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
  * PSM System - Nutrition Adherence Report
  * Frontend View: Reports Module
@@ -126,7 +126,7 @@ require_once dirname(__DIR__, 3) . '/backend/config/database.php'; echo BASE_URL
 
     <div class="report-card">
         <?php
-require_once dirname(__FILE__, 3) . '/backend/config/database.php';
+require_once dirname(__FILE__, 4) . '/backend/config/database.php';
         // Calculate "Adherence" based on symptom log consistency
         // Logic: More logs = Higher adherence score (Gamified metric)
         $q = mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs");
