@@ -209,8 +209,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
-        <a href="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -222,29 +221,34 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
     </div>
 
     <div class="doctor-grid">
-        <!-- Doctor 1 -->
-        <div class="doctor-card" data-id="1">
-            <div class="doctor-avatar">👩‍⚕️</div>
-            <div class="doctor-name">Dr. Hanan</div>
-            <div class="doctor-role">OB-GYN Specialist</div>
-            <button class="book-btn" onclick="openBooking(1, 'Dr. Hanan')">Book Session</button>
-        </div>
+        <?php
+        $prof_res = mysqli_query($conn, "SELECT id, name FROM users WHERE role='professional' ORDER BY id ASC");
+        
+        // Define icons/roles mapping for the default experts we know
+        $expert_meta = [
+            'Dr. Hanan' => ['role' => 'OB-GYN Specialist', 'avatar' => '👩‍⚕️'],
+            'Dr. Izzah' => ['role' => 'Physiotherapist', 'avatar' => '👩‍⚕️'],
+            'Dr. Fara' => ['role' => 'Mental Health Counselor', 'avatar' => '👩‍💼']
+        ];
 
-        <!-- Doctor 2 -->
-        <div class="doctor-card" data-id="2">
-            <div class="doctor-avatar">👩‍⚕️</div>
-            <div class="doctor-name">Dr. Izzah</div>
-            <div class="doctor-role">Physiotherapist</div>
-            <button class="book-btn" onclick="openBooking(2, 'Dr. Izzah')">Book Session</button>
+        if (mysqli_num_rows($prof_res) > 0):
+            while ($prof = mysqli_fetch_assoc($prof_res)):
+                $meta = $expert_meta[$prof['name']] ?? ['role' => 'Healthcare Specialist', 'avatar' => '👩‍⚕️'];
+        ?>
+        <div class="doctor-card" data-id="<?php echo $prof['id']; ?>">
+            <div class="doctor-avatar"><?php echo $meta['avatar']; ?></div>
+            <div class="doctor-name"><?php echo htmlspecialchars($prof['name']); ?></div>
+            <div class="doctor-role"><?php echo $meta['role']; ?></div>
+            <button class="book-btn" onclick="openBooking(<?php echo $prof['id']; ?>, '<?php echo addslashes($prof['name']); ?>')">Book Session</button>
         </div>
-
-        <!-- Doctor 3 -->
-        <div class="doctor-card" data-id="3">
-            <div class="doctor-avatar">👩‍💼</div>
-            <div class="doctor-name">Dr. Fara</div>
-            <div class="doctor-role">Mental Health Counselor</div>
-            <button class="book-btn" onclick="openBooking(3, 'Dr. Fara')">Book Session</button>
-        </div>
+        <?php 
+            endwhile; 
+        else:
+        ?>
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">No specialists available for booking at the moment.</p>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -354,5 +358,4 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
     }
 </script>
 
-<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
