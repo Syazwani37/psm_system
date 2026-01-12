@@ -39,12 +39,12 @@ if (!$tableExists) {
         user_id INT,
         professional_id INT,
         scheduled_at DATETIME,
-        status ENUM('pending','accepted','rejected','completed') DEFAULT 'pending',
+        reason VARCHAR(255),
+        status ENUM('pending','accepted','rejected','completed','rescheduled') DEFAULT 'pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
     mysqli_query($conn, $sql_create);
 }
-
 // --------------------------------------------------------------------------
 // 2. Seed Dummy Data if tables are empty (For Demo Purposes)
 // --------------------------------------------------------------------------

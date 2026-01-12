@@ -223,27 +223,27 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
 
     <div class="doctor-grid">
         <!-- Doctor 1 -->
-        <div class="doctor-card">
+        <div class="doctor-card" data-id="1">
             <div class="doctor-avatar">👩‍⚕️</div>
             <div class="doctor-name">Dr. Hanan</div>
             <div class="doctor-role">OB-GYN Specialist</div>
-            <button class="book-btn" onclick="openBooking('Dr. Hanan')">Book Session</button>
+            <button class="book-btn" onclick="openBooking(1, 'Dr. Hanan')">Book Session</button>
         </div>
 
         <!-- Doctor 2 -->
-        <div class="doctor-card">
+        <div class="doctor-card" data-id="2">
             <div class="doctor-avatar">👩‍⚕️</div>
             <div class="doctor-name">Dr. Izzah</div>
             <div class="doctor-role">Physiotherapist</div>
-            <button class="book-btn" onclick="openBooking('Dr. Izzah')">Book Session</button>
+            <button class="book-btn" onclick="openBooking(2, 'Dr. Izzah')">Book Session</button>
         </div>
 
         <!-- Doctor 3 -->
-        <div class="doctor-card">
+        <div class="doctor-card" data-id="3">
             <div class="doctor-avatar">👩‍💼</div>
             <div class="doctor-name">Dr. Fara</div>
             <div class="doctor-role">Mental Health Counselor</div>
-            <button class="book-btn" onclick="openBooking('Dr. Fara')">Book Session</button>
+            <button class="book-btn" onclick="openBooking(3, 'Dr. Fara')">Book Session</button>
         </div>
     </div>
 </div>
@@ -257,6 +257,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
         </div>
 
         <form onsubmit="handleBookingSubmit(event)">
+            <input type="hidden" id="doctorIdInput">
             <input type="hidden" id="doctorNameInput">
 
             <p style="margin-bottom: 1.5rem; color: #666;">Booking with: <strong id="doctorNameDisplay"></strong></p>
@@ -268,12 +269,12 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
 
             <div class="form-group">
                 <label class="form-label">Preferred Time</label>
-                <input type="time" class="form-control" required>
+                <input type="time" id="timeInput" class="form-control" required>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Reason for Consultation</label>
-                <input type="text" class="form-control" placeholder="e.g. Checkup, Pain relief..." required>
+                <input type="text" id="reasonInput" class="form-control" placeholder="e.g. Checkup, Pain relief..." required>
             </div>
 
             <button type="submit" class="book-btn" style="margin-top: 1rem;">Confirm Booking</button>
@@ -285,7 +286,8 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
 <div id="toast-container"></div>
 
 <script>
-    function openBooking(doctorName) {
+    function openBooking(doctorId, doctorName) {
+        document.getElementById('doctorIdInput').value = doctorId;
         document.getElementById('doctorNameInput').value = doctorName;
         document.getElementById('doctorNameDisplay').textContent = doctorName;
         // Set min date to today
@@ -299,28 +301,40 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
 
     function handleBookingSubmit(event) {
         event.preventDefault();
-        const doctor = document.getElementById('doctorNameInput').value;
+        const doctorId = document.getElementById('doctorIdInput').value;
+        const doctorName = document.getElementById('doctorNameInput').value;
         const date = document.getElementById('dateInput').value;
+        const time = document.getElementById('timeInput').value;
+        const reason = document.getElementById('reasonInput').value;
 
-        // Store in localStorage for Professional Dashboard to pick up
-        // In a real app, this would be an AJAX POST to backend/api/consultations/create.php
-        const newBooking = {
-            doctor: doctor,
-            date: date, // Simplified
-            patientName: "<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Mother'; ?>", // Use PHP session name if available
-            status: 'pending'
+        const bookingData = {
+            professional_id: doctorId,
+            scheduled_at: `${date} ${time}:00`,
+            reason: reason
         };
 
-        let bookings = JSON.parse(localStorage.getItem('expertBookings')) || [];
-        bookings.push(newBooking);
-        localStorage.setItem('expertBookings', JSON.stringify(bookings));
-
-        // Close Modal
-        closeBooking();
-
-        // Show Notification
-        showNotification(`✅ Booking request sent to ${doctor}!`);
+        fetch('<?php echo BASE_URL; ?>/backend/api/consultations/book.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookingData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Close Modal
+                closeBooking();
+                // Show Notification
+                showNotification(`✅ Booking request sent to ${doctorName}!`);
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to send booking request.');
+        });
     }
 
     function showNotification(message) {
@@ -342,5 +356,3 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo isset($
 
 <?php
 require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
-
-

@@ -123,8 +123,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">
-        <a href="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
+        <a href="<?php echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; position: relative; z-index: 10;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <div>
@@ -148,7 +147,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
     <div class="modal-overlay" id="rescheduleModal">
         <div class="modal-card">
             <h3 style="margin-bottom: 1.5rem; color: #1565C0;">Reschedule Session</h3>
-            <input type="hidden" id="rescheduleIndex">
+            <input type="hidden" id="rescheduleId">
 
             <div class="form-group">
                 <label class="form-label">New Date</label>
@@ -172,78 +171,84 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
     document.addEventListener('DOMContentLoaded', loadBookings);
 
     function loadBookings() {
-        const bookings = JSON.parse(localStorage.getItem('expertBookings')) || [];
         const container = document.getElementById('bookingsList');
-
-        container.innerHTML = '';
-
-        if (bookings.length === 0) {
-            container.innerHTML = `
-            <div class="empty-state">
-                <i class="far fa-calendar-times" style="font-size: 4rem; opacity: 0.3; margin-bottom: 1rem;"></i>
-                <p>No booking requests found.</p>
-            </div>
-        `;
-            return;
-        }
-
-        bookings.forEach((booking, index) => {
-            let statusClass = 'pending';
-            if (booking.status === 'accepted') statusClass = 'accepted';
-            if (booking.status === 'rescheduled') statusClass = 'rescheduled';
-
-            // Format Date (simple)
-            const dateObj = new Date(booking.date);
-            const dateStr = isNaN(dateObj) ? booking.date : dateObj.toLocaleDateString();
-
-            const patientName = booking.patientName || "Patient (Mother)";
-
-            let actionsHtml = '';
-            if (statusClass === 'pending' || booking.status === 'notified') {
-                actionsHtml = `
-                <button class="btn-action btn-accept" onclick="acceptBooking(${index})">
-                    <i class="fas fa-check"></i> Accept
-                </button>
-                <button class="btn-action btn-reschedule" onclick="openReschedule(${index})">
-                    <i class="fas fa-clock"></i> Reschedule
-                </button>
-            `;
-            } else if (statusClass === 'accepted') {
-                actionsHtml = `<span style="color: #2E7D32; font-weight: 600;"><i class="fas fa-check-circle me-1"></i> Confirmed</span>`;
-            } else if (statusClass === 'rescheduled') {
-                actionsHtml = `<span style="color: #1565C0; font-weight: 600;"><i class="fas fa-history me-1"></i> Rescheduled to ${booking.newDate} ${booking.newTime}</span>`;
+        
+        fetch('<?php echo BASE_URL; ?>/backend/api/consultations/get_bookings.php')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                container.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                return;
             }
 
-            const html = `
-            <div class="booking-card ${statusClass}">
-                <div class="booking-info">
-                    <div class="booking-date">${booking.doctor} - Re: ${patientName}</div>
-                    <div class="booking-details">Reason: Checkup/Consultation</div>
-                    <div class="booking-details" style="margin-top: 0.25rem; font-size: 0.85rem; opacity: 0.8;">Requested: ${dateStr}</div>
+            const bookings = data.bookings;
+            container.innerHTML = '';
+
+            if (bookings.length === 0) {
+                container.innerHTML = `
+                <div class="empty-state">
+                    <i class="far fa-calendar-times" style="font-size: 4rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+                    <p>No booking requests found.</p>
                 </div>
-                <div class="booking-actions">
-                    ${actionsHtml}
+            `;
+                return;
+            }
+
+            bookings.forEach((booking) => {
+                let statusClass = booking.status;
+                if (statusClass === 'pending') statusClass = 'pending';
+                if (statusClass === 'accepted') statusClass = 'accepted';
+                if (statusClass === 'rescheduled') statusClass = 'rescheduled';
+
+                const dateStr = new Date(booking.scheduled_at).toLocaleString();
+                const patientName = booking.patient_name || "Patient (Mother)";
+                const reason = booking.reason || "Routine Checkup";
+
+                let actionsHtml = '';
+                if (booking.status === 'pending') {
+                    actionsHtml = `
+                    <button class="btn-action btn-accept" onclick="acceptBooking(${booking.id})">
+                        <i class="fas fa-check"></i> Accept
+                    </button>
+                    <button class="btn-action btn-reschedule" onclick="openReschedule(${booking.id})">
+                        <i class="fas fa-clock"></i> Reschedule
+                    </button>
+                `;
+                } else if (booking.status === 'accepted') {
+                    actionsHtml = `<span style="color: #2E7D32; font-weight: 600;"><i class="fas fa-check-circle me-1"></i> Confirmed</span>`;
+                } else if (booking.status === 'rescheduled') {
+                    actionsHtml = `<span style="color: #1565C0; font-weight: 600;"><i class="fas fa-history me-1"></i> Rescheduled</span>`;
+                }
+
+                const html = `
+                <div class="booking-card ${statusClass}">
+                    <div class="booking-info">
+                        <div class="booking-date">Patient: ${patientName}</div>
+                        <div class="booking-details">Reason: ${reason}</div>
+                        <div class="booking-details" style="margin-top: 0.25rem; font-size: 0.85rem; opacity: 0.8;">Scheduled: ${dateStr}</div>
+                    </div>
+                    <div class="booking-actions">
+                        ${actionsHtml}
+                    </div>
                 </div>
-            </div>
-        `;
-            container.innerHTML += html;
+            `;
+                container.innerHTML += html;
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            container.innerHTML = `<div class="alert alert-danger">Failed to load bookings.</div>`;
         });
     }
 
-    function acceptBooking(index) {
+    function acceptBooking(id) {
         if(!confirm("Are you sure you want to accept this booking?")) return;
         
-        let bookings = JSON.parse(localStorage.getItem('expertBookings'));
-        bookings[index].status = 'accepted';
-        localStorage.setItem('expertBookings', JSON.stringify(bookings));
-
-        // Notify (fake)
-        alert("✅ Booking Accepted!");
-        loadBookings();
+        updateBookingStatus(id, 'accepted');
     }
 
-    function openReschedule(index) {
-        document.getElementById('rescheduleIndex').value = index;
+    function openReschedule(id) {
+        document.getElementById('rescheduleId').value = id;
         document.getElementById('rescheduleModal').classList.add('active');
     }
 
@@ -252,7 +257,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
     }
 
     function confirmReschedule() {
-        const index = document.getElementById('rescheduleIndex').value;
+        const id = document.getElementById('rescheduleId').value;
         const date = document.getElementById('newDate').value;
         const time = document.getElementById('newTime').value;
 
@@ -261,19 +266,36 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
             return;
         }
 
-        let bookings = JSON.parse(localStorage.getItem('expertBookings'));
-        bookings[index].status = 'rescheduled';
-        bookings[index].newDate = date;
-        bookings[index].newTime = time;
-        localStorage.setItem('expertBookings', JSON.stringify(bookings));
+        updateBookingStatus(id, 'rescheduled', `${date} ${time}:00`);
+    }
 
-        alert("📅 Booking Rescheduled!");
-        closeReschedule();
-        loadBookings();
+    function updateBookingStatus(id, status, newTime = null) {
+        const payload = {
+            consultation_id: id,
+            status: status
+        };
+        if (newTime) payload.scheduled_at = newTime;
+
+        fetch('<?php echo BASE_URL; ?>/backend/api/consultations/update_status.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`✅ Consultation ${status}!`);
+                if (status === 'rescheduled') closeReschedule();
+                loadBookings();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to update consultation.');
+        });
     }
 </script>
 
-<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
-
-
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
