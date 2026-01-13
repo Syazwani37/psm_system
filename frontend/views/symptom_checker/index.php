@@ -205,6 +205,58 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
                         <option value="very sad">Overwhelmed / Hopeless</option>
                     </select>
                 </div>
+
+                <div class="mb-3" style="grid-column: 1 / -1;">
+                    <label class="form-label fw-bold small text-muted">
+                        <i class="fas fa-notes-medical me-2 text-primary"></i>Specific Symptoms (Select all that apply)
+                    </label>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="breast_pain" id="sym_breast">
+                                <label class="form-check-label" for="sym_breast">Breast Pain / Lumps</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="severe_headache" id="sym_head">
+                                <label class="form-check-label" for="sym_head">Severe Headache</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="vision_problems" id="sym_vision">
+                                <label class="form-check-label" for="sym_vision">Blurred Vision / Spots</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="difficulty_breathing" id="sym_breath">
+                                <label class="form-check-label" for="sym_breath">Difficulty Breathing</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="severe_chest_pain" id="sym_chest">
+                                <label class="form-check-label" for="sym_chest">Chest Pain</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="foul_smelling_discharge" id="sym_smell">
+                                <label class="form-check-label" for="sym_smell">Foul Smelling Discharge</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="dizziness" id="sym_dizz">
+                                <label class="form-check-label" for="sym_dizz">Dizziness / Fainting</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="sleep_difficulties" id="sym_sleep">
+                                <label class="form-check-label" for="sym_sleep">Sleep Difficulties (Insomnia)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="increased_heart_rate" id="sym_heart">
+                                <label class="form-check-label" for="sym_heart">Fast Heart Rate / Palpitations</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="mild_fatigue" id="sym_fatigue">
+                                <label class="form-check-label" for="sym_fatigue">General Fatigue / Tiredness</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Result Area -->
@@ -248,6 +300,11 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
         if (mood === 'sad') symptoms.push('mood_changes');
         if (mood === 'very sad') symptoms.push('severe_mood_changes');
         if (temp > 38.0) symptoms.push('fever');
+
+        // Add checked specific symptoms
+        document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+            symptoms.push(checkbox.value);
+        });
 
         // Prepare data for API
         const data = {

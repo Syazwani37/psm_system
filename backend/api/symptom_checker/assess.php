@@ -1,7 +1,7 @@
 <?php
 /**
  * PSM System - Symptom Checker Assessment API
- * Uses Decision Tree Rules to assess symptoms and provide recommendations
+ * Uses a Decision Tree with 10 Specific Rules
  */
 
 header('Content-Type: application/json');
@@ -30,16 +30,19 @@ try {
     $bleeding_status = $data['bleeding_status'] ?? 'normal';
     $wound_condition = $data['wound_condition'] ?? 'normal';
     $mood_status = $data['mood_status'] ?? 'normal';
+    $week_postpartum = intval($data['week_postpartum'] ?? 0);
     $user_id = $_SESSION['user_id'];
 
-    // Decision Tree Rule Execution for Symptom Assessment
-    $assessment_result = executeSymptomDecisionTree($symptoms, $temperature, $pain_level, $bleeding_status, $wound_condition, $mood_status);
+    // execute the decision tree
+    $assessment_result = executeSymptomDecisionTree($symptoms, $temperature, $pain_level, $bleeding_status, $wound_condition, $mood_status, $week_postpartum);
 
-    // Save the assessment to the database
+    // Save logs
     $stmt = $conn->prepare("INSERT INTO symptom_logs (user_id, week_postpartum, temperature, pain_level, mood_status, wound_condition, bleeding_status, result_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $week = intval($data['week_postpartum'] ?? 0);
     $result_status = $assessment_result['risk_level'];
-    $stmt->bind_param("iidsssss", $user_id, $week, $temperature, $pain_level, $mood_status, $wound_condition, $bleeding_status, $result_status);
+    
+    // Convert boolean/custom statuses to db enum friendly values if needed, but here we store raw inputs mostly
+    // We'll store the RISK LEVEL as result_status
+    $stmt->bind_param("iidsssss", $user_id, $week_postpartum, $temperature, $pain_level, $mood_status, $wound_condition, $bleeding_status, $result_status);
     $stmt->execute();
     $stmt->close();
 
@@ -53,201 +56,98 @@ try {
 }
 
 /**
- * Execute the Symptom Decision Tree Rules
+ * 10 Rule-Based Decision Tree Logic
  */
-function executeSymptomDecisionTree($symptoms, $temperature, $pain_level, $bleeding_status, $wound_condition, $mood_status) {
-    // Initialize risk level and recommendation
+function executeSymptomDecisionTree($symptoms, $temperature, $pain_level, $bleeding, $wound, $mood, $week) {
+    
+    // Defaults
     $risk_level = 'low';
-    $recommendation = '';
-    $action = '';
-    $priority = 'routine';
+    $recommendation = 'Symptoms appear normal. Continue monitoring.';
+    $action = 'monitor';
+    $matched_rule = 'General Check';
 
-    // Decision Tree Rule 1: Check for emergency symptoms
-    if (hasEmergencySymptoms($symptoms)) {
-        $risk_level = 'high';
-        $recommendation = 'Seek immediate medical attention. This may be a medical emergency.';
-        $action = 'emergency_consultation';
-        $priority = 'immediate';
-    }
-    // Decision Tree Rule 2: Check for high-risk symptoms
-    elseif (hasHighRiskSymptoms($symptoms, $temperature, $pain_level, $bleeding_status, $wound_condition)) {
-        $risk_level = 'high';
-        $recommendation = 'Contact your healthcare provider immediately. Urgent consultation recommended.';
-        $action = 'urgent_consultation';
-        $priority = 'urgent';
-    }
-    // Decision Tree Rule 3: Check for medium-risk symptoms
-    elseif (hasMediumRiskSymptoms($symptoms, $temperature, $pain_level, $wound_condition, $mood_status)) {
-        $risk_level = 'medium';
-        $recommendation = 'Schedule a consultation with your healthcare provider soon.';
-        $action = 'schedule_consultation';
-        $priority = 'soon';
-    }
-    // Decision Tree Rule 4: Check for low-risk symptoms
-    elseif (hasLowRiskSymptoms($symptoms, $mood_status)) {
-        $risk_level = 'low';
-        $recommendation = 'Continue monitoring symptoms. Maintain self-care practices.';
-        $action = 'monitor_symptoms';
-        $priority = 'monitor';
-    }
-    // Decision Tree Rule 5: Default to low risk if no concerning symptoms
-    else {
-        $risk_level = 'low';
-        $recommendation = 'Symptoms appear to be within normal range. Continue regular postpartum care.';
-        $action = 'normal_care';
-        $priority = 'routine';
+    /**
+     * CATEGORY: CRITICAL EMERGENCY (High Risk)
+     */
+
+    // RULE 1: Pulmonary Embolism Risk (Difficulty Breathing + Chest Pain)
+    if (in_array('difficulty_breathing', $symptoms) && in_array('severe_chest_pain', $symptoms)) {
+        return buildResponse('high', 'CRITICAL: Symptoms suggest Respiratory Distress. Call Ambulance immediately.', 'emergency_consultation', 'Rule 1: PE Risk');
     }
 
+    // RULE 2: Pre-eclampsia Warning (Severe Headache + Vision Problems)
+    if (in_array('severe_headache', $symptoms) && in_array('vision_problems', $symptoms)) {
+        return buildResponse('high', 'URGENT: Potential Pre-eclampsia signs detected. Go to Emergency.', 'emergency_consultation', 'Rule 2: Pre-eclampsia');
+    }
+
+    // RULE 3: Postpartum Hemorrhage Risk (Heavy Bleeding + Dizziness)
+    if (($bleeding === 'heavy' || $bleeding === 'excessive') && (in_array('dizziness', $symptoms) || in_array('fainting', $symptoms))) {
+        return buildResponse('high', 'URGENT: Excessive blood loss symptoms. Seek medical help immediately.', 'emergency_consultation', 'Rule 3: Hemorrhage');
+    }
+
+    /**
+     * CATEGORY: ACUTE INFECTION (High/Medium Risk)
+     */
+
+    // RULE 4: Suspected Endometritis (Fever + Foul Smell)
+    if ($temperature >= 38.0 && in_array('foul_smelling_discharge', $symptoms)) {
+        return buildResponse('high', 'High fever with foul discharge suggests Uterine Infection. Consult doctor.', 'urgent_consultation', 'Rule 4: Endometritis');
+    }
+
+    // RULE 5: Suspected Mastitis (Fever + Breast Pain)
+    if ($temperature >= 38.0 && in_array('breast_pain', $symptoms)) {
+        return buildResponse('high', 'Fever with breast pain suggests Mastitis. Continue breastfeeding and see a doctor.', 'urgent_consultation', 'Rule 5: Mastitis');
+    }
+
+    // RULE 6: Wound Infection (Fever + Wound Issues)
+    if ($temperature >= 37.5 && ($wound === 'no' || in_array('wound_issues', $symptoms))) { // wound='no' means 'Red/Swollen' in frontend value map
+        return buildResponse('medium', 'Signs of potential wound infection (C-sec/Episiotomy).', 'schedule_consultation', 'Rule 6: Wound Infection');
+    }
+
+    /**
+     * CATEGORY: MENTAL HEALTH (Medium Risk)
+     */
+
+    // RULE 7: Postpartum Depression Risk (Sad Mood + Sleep Issues)
+    if (($mood === 'sad' || $mood === 'very sad') && in_array('sleep_difficulties', $symptoms)) {
+        return buildResponse('medium', 'You may be experiencing Postpartum Depression symptoms. Please seek support.', 'schedule_consultation', 'Rule 7: PPD Risk');
+    }
+
+    // RULE 8: High Anxiety State (Anxious + Fast Heartbeat)
+    if (($mood === 'sad' || $mood === 'very sad') && in_array('increased_heart_rate', $symptoms)) { 
+        // Note: 'sad' map captures 'Anxious' in frontend logic if not distinct. 
+        // Frontend logic maps: sad -> "Sad / Anxious". very sad -> "Overwhelmed".
+        return buildResponse('medium', 'Physical symptoms of anxiety detected. Practice deep breathing.', 'schedule_consultation', 'Rule 8: Anxiety');
+    }
+
+    /**
+     * CATEGORY: GENERAL RECOVERY (Medium/Low Risk)
+     */
+
+    // RULE 9: Delayed Recovery (Bleeding > 6 Weeks)
+    if ($week > 6 && $bleeding !== 'none') {
+        return buildResponse('medium', 'Bleeding should likely have stopped by week 6. Consult a doctor.', 'schedule_consultation', 'Rule 9: Delayed Recovery');
+    }
+
+    // RULE 10: Physical Exhaustion (Pain + Fatigue)
+    if (($pain_level >= 1) && in_array('mild_fatigue', $symptoms)) {
+        return buildResponse('low', 'You are experiencing normal postpartum fatigue. Ensure you get rest.', 'monitor', 'Rule 10: Exhaustion');
+    }
+
+    // FALLBACK: GENERAL CHECK
+    if ($temperature > 37.5 || $pain_level > 6 || $bleeding === 'heavy') {
+        return buildResponse('medium', 'Abnormal readings detected. Monitor closely.', 'monitor', 'General Check');
+    }
+
+    return buildResponse('low', 'Your recovery appears to be on track.', 'monitor', 'Normal');
+}
+
+function buildResponse($risk, $rec, $act, $rule) {
     return [
-        'risk_level' => $risk_level,
-        'recommendation' => $recommendation,
-        'action' => $action,
-        'priority' => $priority,
-        'symptoms' => $symptoms,
-        'temperature' => $temperature,
-        'pain_level' => $pain_level,
-        'bleeding_status' => $bleeding_status,
-        'wound_condition' => $wound_condition,
-        'mood_status' => $mood_status
+        'risk_level' => $risk,
+        'recommendation' => $rec,
+        'action' => $act,
+        'matched_rule' => $rule
     ];
-}
-
-/**
- * Decision Tree Rule: Check for emergency symptoms
- */
-function hasEmergencySymptoms($symptoms) {
-    $emergency_symptoms = [
-        'severe_chest_pain',
-        'difficulty_breathing',
-        'severe_headache',
-        'vision_problems',
-        'heavy_bleeding',
-        'high_fever_over_39',
-        'seizures',
-        'loss_of_consciousness'
-    ];
-
-    foreach ($emergency_symptoms as $emergency_symptom) {
-        if (in_array($emergency_symptom, $symptoms)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-/**
- * Decision Tree Rule: Check for high-risk symptoms
- */
-function hasHighRiskSymptoms($symptoms, $temperature, $pain_level, $bleeding_status, $wound_condition) {
-    // High temperature (>38°C)
-    if ($temperature > 38.0) {
-        return true;
-    }
-
-    // Severe pain (8-10 on scale)
-    if ($pain_level >= 8) {
-        return true;
-    }
-
-    // Heavy bleeding
-    if ($bleeding_status === 'heavy' || $bleeding_status === 'excessive') {
-        return true;
-    }
-
-    // Wound infection signs
-    if ($wound_condition === 'infected' || $wound_condition === 'severe') {
-        return true;
-    }
-
-    // Specific high-risk symptoms
-    $high_risk_symptoms = [
-        'persistent_fever',
-        'severe_abdominal_pain',
-        'foul_smelling_discharge',
-        'increased_heart_rate',
-        'dizziness',
-        'fainting'
-    ];
-
-    foreach ($high_risk_symptoms as $high_risk_symptom) {
-        if (in_array($high_risk_symptom, $symptoms)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-/**
- * Decision Tree Rule: Check for medium-risk symptoms
- */
-function hasMediumRiskSymptoms($symptoms, $temperature, $pain_level, $wound_condition, $mood_status) {
-    // Moderate temperature (37.5-38°C)
-    if ($temperature >= 37.5 && $temperature <= 38.0) {
-        return true;
-    }
-
-    // Moderate pain (5-7 on scale)
-    if ($pain_level >= 5 && $pain_level <= 7) {
-        return true;
-    }
-
-    // Moderate wound issues
-    if ($wound_condition === 'swelling' || $wound_condition === 'mild_infection') {
-        return true;
-    }
-
-    // Mood concerns
-    if ($mood_status === 'depressed' || $mood_status === 'anxious' || $mood_status === 'overwhelmed') {
-        return true;
-    }
-
-    // Medium-risk symptoms
-    $medium_risk_symptoms = [
-        'mild_fever',
-        'moderate_abdominal_pain',
-        'mild_headache',
-        'mild_nausea',
-        'mild_dizziness',
-        'mood_swings',
-        'sleep_difficulties',
-        'appetite_changes'
-    ];
-
-    foreach ($medium_risk_symptoms as $medium_risk_symptom) {
-        if (in_array($medium_risk_symptom, $symptoms)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-/**
- * Decision Tree Rule: Check for low-risk symptoms
- */
-function hasLowRiskSymptoms($symptoms, $mood_status) {
-    // Mood fluctuations that are normal
-    if ($mood_status === 'normal' || $mood_status === 'happy' || $mood_status === 'tired') {
-        return true;
-    }
-
-    // Low-risk symptoms
-    $low_risk_symptoms = [
-        'mild_fatigue',
-        'normal_discharge',
-        'mild_breast_tenderness',
-        'mild_abdominal_cramping',
-        'normal_healing',
-        'mild_bloating'
-    ];
-
-    foreach ($low_risk_symptoms as $low_risk_symptom) {
-        if (in_array($low_risk_symptom, $symptoms)) {
-            return true;
-        }
-    }
-
-    return false;
 }
 ?>
