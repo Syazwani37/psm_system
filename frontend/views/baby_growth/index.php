@@ -125,15 +125,13 @@ require_once BASE_PATH . '/backend/includes/header.php';
 <div class="container py-5" style="max-width: 1000px;">
     <!-- Header -->
     <div class="d-flex align-items-center mb-4">
-        <a href="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
+        <a href="<?php require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDashboardUrl(); ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;" title="Back to Dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h2 class="mb-0" style="font-family: 'Playfair Display', serif; color: #4A148C;">Baby Growth & Milestones</h2>
     </div>
 
-    <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlashMessage(); ?>
+    <?php require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlashMessage(); ?>
 
     <div class="row g-4">
         <!-- Growth Entry Form -->
@@ -151,8 +149,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
                         
                         <div class="mb-3">
                             <label class="form-label text-muted small fw-bold">Date</label>
-                            <input type="date" name="date" class="form-control" required value="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('Y-m-d'); ?>">
+                            <input type="date" name="date" class="form-control" required value="<?php require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('Y-m-d'); ?>">
                         </div>
                         
                         <div class="row">
@@ -192,7 +189,6 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo date('Y
                     
                     <div style="max-height: 320px; overflow-y: auto;">
                         <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                         $milestones_list = [
                             '1m_smile' => 'Smiles at people',
                             '1m_head' => 'Can hold head up briefly',
@@ -210,22 +206,16 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
                         <div class="milestone-item">
                             <form method="POST" class="d-flex w-100 align-items-center m-0">
                                 <input type="hidden" name="toggle_milestone" value="1">
-                                <input type="hidden" name="milestone_id" value="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $id; ?>">
-                                <input type="hidden" name="milestone_name" value="<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $name; ?>">
-                                <input type="checkbox" class="milestone-check" onchange="this.form.submit()" <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $is_done ? 'checked' : ''; ?>>
-                                <span class="milestone-label <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $is_done ? 'done' : ''; ?>" 
+                                <input type="hidden" name="milestone_id" value="<?php echo $id; ?>">
+                                <input type="hidden" name="milestone_name" value="<?php echo $name; ?>">
+                                <input type="checkbox" class="milestone-check" onchange="this.form.submit()" <?php echo $is_done ? 'checked' : ''; ?>>
+                                <span class="milestone-label <?php echo $is_done ? 'done' : ''; ?>" 
                                       onclick="this.previousElementSibling.click()">
-                                    <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $name; ?>
+                                    <?php echo $name; ?>
                                 </span>
                             </form>
                         </div>
-                        <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endforeach; ?>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -254,40 +244,68 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endforeach; 
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_encode($dates); ?>,
+            labels: <?php echo json_encode($dates); ?>,
             datasets: [{
                 label: 'Weight (kg)',
-                data: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_encode($weights); ?>,
+                data: <?php echo json_encode($weights); ?>,
                 borderColor: '#9575CD',
                 backgroundColor: 'rgba(149, 117, 205, 0.1)',
                 fill: true,
-                tension: 0.4
+                tension: 0.4,
+                yAxisID: 'y'
             }, {
                 label: 'Height (cm)',
-                data: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo json_encode($heights); ?>,
+                data: <?php echo json_encode($heights); ?>,
                 borderColor: '#26C6DA',
                 borderDash: [5, 5],
                 fill: false,
-                tension: 0.4
+                tension: 0.4,
+                yAxisID: 'y1'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
             scales: {
-                y: { beginAtZero: false }
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: { display: true, text: 'Weight (kg)' },
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: { display: true, text: 'Height (cm)' },
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                }
             },
             plugins: {
-                legend: { position: 'bottom' }
+                legend: { position: 'bottom' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y;
+                            }
+                            return label;
+                        }
+                    }
+                }
             }
         }
     });
 </script>
 
-<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
-
-
+<?php require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
