@@ -222,9 +222,13 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
     <div class="doctor-grid">
         <?php
-        $prof_res = mysqli_query($conn, "SELECT id, name FROM users WHERE role='professional' ORDER BY id ASC");
+        // Only show our 3 official specialists
+        $prof_res = mysqli_query($conn, "SELECT id, name FROM users 
+            WHERE role='professional' 
+            AND name IN ('Dr. Hanan', 'Dr. Izzah', 'Dr. Fara')
+            ORDER BY id ASC");
         
-        // Define icons/roles mapping for the default experts we know
+        // Define icons/roles mapping
         $expert_meta = [
             'Dr. Hanan' => ['role' => 'OB-GYN Specialist', 'avatar' => '👩‍⚕️'],
             'Dr. Izzah' => ['role' => 'Physiotherapist', 'avatar' => '👩‍⚕️'],
