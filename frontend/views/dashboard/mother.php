@@ -92,11 +92,37 @@ $userName = getUserName();
 
 <div class="dashboard-wrapper">
     <!-- Header -->
-    <header class="d-flex justify-content-end align-items-center py-3 mb-3">
-        <a href="<?php
+    <header class="d-flex justify-content-between align-items-center py-3 mb-3">
+        <div></div> <!-- Empty div to push logout button to the right -->
+        <div class="d-flex align-items-center gap-3">
+            <!-- Notifications Bell -->
+            <div class="position-relative">
+                <button class="btn btn-light position-relative" id="notificationBell" type="button" data-bs-toggle="dropdown">
+                    <i class="fas fa-bell fa-lg"></i>
+                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; $unread_count = getUnreadNotificationCount(); if ($unread_count > 0): ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $unread_count; ?>
+                        </span>
+                    <?php
+require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationBell" id="notificationDropdown">
+                    <li><h6 class="dropdown-header">Notifications</h6></li>
+                    <li><a class="dropdown-item" href="#" id="markAllRead">Mark all as read</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li id="notificationsList">
+                        <div class="text-center py-2 text-muted">Loading notifications...</div>
+                    </li>
+                </ul>
+            </div>
+
+            <a href="<?php
 require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/views/auth/logout.php" class="btn btn-outline-danger">
-            <i class="fas fa-sign-out-alt me-1"></i> Logout
-        </a>
+                <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </a>
+        </div>
     </header>
 
     <!-- Welcome Card -->
@@ -311,6 +337,125 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
         </div>
     </div>
 </div>
+
+<script>
+// Notification functionality
+document.addEventListener('DOMContentLoaded', function() {
+    loadNotifications();
+
+    // Refresh notifications every 30 seconds
+    setInterval(loadNotifications, 30000);
+
+    // Mark all as read
+    document.getElementById('markAllRead').addEventListener('click', function(e) {
+        e.preventDefault();
+        markAllNotificationsAsRead();
+    });
+});
+
+function loadNotifications() {
+    fetch('<?php echo BASE_URL; ?>/backend/api/notifications/get_notifications.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayNotifications(data.notifications);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading notifications:', error);
+        });
+}
+
+function displayNotifications(notifications) {
+    const notificationsList = document.getElementById('notificationsList');
+
+    if (notifications.length === 0) {
+        notificationsList.innerHTML = '<div class="text-center py-2 text-muted">No notifications</div>';
+        return;
+    }
+
+    let html = '';
+    notifications.forEach(notification => {
+        const formattedDate = new Date(notification.created_at).toLocaleString();
+        html += `
+            <a class="dropdown-item notification-item ${!notification.is_read ? 'bg-light' : ''}" href="#" data-id="${notification.id}">
+                <div class="d-flex justify-content-between">
+                    <div>${notification.message}</div>
+                    ${!notification.is_read ? '<span class="badge bg-danger">New</span>' : ''}
+                </div>
+                <small class="text-muted">${formattedDate}</small>
+            </a>
+        `;
+    });
+
+    notificationsList.innerHTML = html;
+
+    // Add event listeners to notification items
+    document.querySelectorAll('.notification-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const notificationId = this.getAttribute('data-id');
+            markNotificationAsRead(notificationId, this);
+        });
+    });
+}
+
+function markNotificationAsRead(notificationId, element) {
+    fetch('<?php echo BASE_URL; ?>/backend/api/notifications/mark_read.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ notification_id: parseInt(notificationId) })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the 'bg-light' class to indicate it's read
+            element.classList.remove('bg-light');
+            // Remove the 'New' badge
+            const badge = element.querySelector('.badge');
+            if (badge) {
+                badge.remove();
+            }
+            // Update the notification count in the header
+            updateNotificationCount();
+        }
+    })
+    .catch(error => {
+        console.error('Error marking notification as read:', error);
+    });
+}
+
+function markAllNotificationsAsRead() {
+    fetch('<?php echo BASE_URL; ?>/backend/api/notifications/mark_all_read.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Reload notifications to reflect changes
+            loadNotifications();
+            // Update the notification count in the header
+            updateNotificationCount();
+            // Show a simple success message
+            alert('All notifications marked as read');
+        }
+    })
+    .catch(error => {
+        console.error('Error marking all notifications as read:', error);
+    });
+}
+
+function updateNotificationCount() {
+    // Reload the page to update the notification count in the header
+    location.reload();
+}
+</script>
 
 <?php
 require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>

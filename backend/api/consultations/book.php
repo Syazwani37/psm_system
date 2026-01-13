@@ -31,11 +31,24 @@ try {
     $status = 'pending';
 
     // Insert into database
-    $sql = "INSERT INTO consultations (user_id, professional_id, scheduled_at, reason, status) 
+    $sql = "INSERT INTO consultations (user_id, professional_id, scheduled_at, reason, status)
             VALUES ($user_id, $professional_id, '$scheduled_at', '$reason', '$status')";
 
     if (mysqli_query($conn, $sql)) {
-        echo json_encode(['success' => true, 'message' => 'Booking request sent!']);
+        // Get the user's name to include in the notification
+        $user_result = mysqli_query($conn, "SELECT name FROM users WHERE id = $user_id");
+        $user = mysqli_fetch_assoc($user_result);
+        $user_name = $user['name'];
+
+        // Format the scheduled date for the notification
+        $formatted_date = date('M j, Y \a\t g:i A', strtotime($scheduled_at));
+
+        // Create notification for the professional
+        $notification_message = "New consultation request from $user_name on $formatted_date. Reason: $reason";
+        $notification_sql = "INSERT INTO notifications (user_id, message, is_read) VALUES ($professional_id, '$notification_message', FALSE)";
+        mysqli_query($conn, $notification_sql);
+
+        echo json_encode(['success' => true, 'message' => 'Booking request sent! Professional has been notified.']);
     } else {
         echo json_encode(['success' => false, 'message' => 'Database error']);
     }

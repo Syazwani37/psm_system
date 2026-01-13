@@ -146,4 +146,24 @@ function getDashboardUrl($role = null) {
             return BASE_URL . '/frontend/views/auth/login.php';
     }
 }
+
+/**
+ * Get unread notification count for the current user
+ * @return int
+ */
+function getUnreadNotificationCount() {
+    global $conn;
+
+    if (!isset($_SESSION['user_id'])) {
+        return 0;
+    }
+
+    $user_id = (int)$_SESSION['user_id'];
+
+    $sql = "SELECT COUNT(*) as count FROM notifications WHERE user_id = $user_id AND is_read = FALSE";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+
+    return (int)$row['count'];
+}
 ?>
