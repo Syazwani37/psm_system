@@ -36,7 +36,7 @@ if (mysqli_multi_query($conn, $sql)) {
         ['name' => 'Dr. Izzah', 'email' => 'izzah@gmail.com', 'pass' => 'password123', 'role' => 'professional'],
         ['name' => 'Dr. Fara', 'email' => 'fara@gmail.com', 'pass' => 'password123', 'role' => 'professional'],
         ['name' => 'Test Mother', 'email' => 'mother@gmail.com', 'pass' => 'password123', 'role' => 'mother'],
-        ['name' => 'Test Admin', 'email' => 'admin@gmail.com', 'pass' => 'password123', 'role' => 'admin']
+        ['name' => 'Admin', 'email' => 'admin@gmail.com', 'pass' => 'password123', 'role' => 'admin']
     ];
 
     foreach ($testUsers as $user) {

@@ -56,7 +56,7 @@ require_once dirname(__FILE__, 1) . '/backend/config/database.php';
     restoreUser($conn, 'Dr. Expert', 'professional@gmail.com', 'abc123', 'professional');
 
     // 3. Restore Admin
-    restoreUser($conn, 'System Admin', 'admin@gmail.com', 'adminpass', 'admin');
+    restoreUser($conn, 'Admin', 'admin@gmail.com', 'adminpass', 'admin');
     ?>
 
     <h2>All Done!</h2>
