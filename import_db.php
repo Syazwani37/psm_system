@@ -32,11 +32,11 @@ if (mysqli_multi_query($conn, $sql)) {
 
     // Logic baru: Check & Insert satu per satu kalau takde
     $testUsers = [
-        ['name' => 'Dr. Hanan', 'email' => 'hanan@example.com', 'pass' => 'password123', 'role' => 'professional'],
-        ['name' => 'Dr. Izzah', 'email' => 'izzah@example.com', 'pass' => 'password123', 'role' => 'professional'],
-        ['name' => 'Dr. Fara', 'email' => 'fara@example.com', 'pass' => 'password123', 'role' => 'professional'],
-        ['name' => 'Test Mother', 'email' => 'mother@example.com', 'pass' => 'password123', 'role' => 'mother'],
-        ['name' => 'Test Admin', 'email' => 'admin@example.com', 'pass' => 'password123', 'role' => 'admin']
+        ['name' => 'Dr. Hanan', 'email' => 'hanan@gmail.com', 'pass' => 'password123', 'role' => 'professional'],
+        ['name' => 'Dr. Izzah', 'email' => 'izzah@gmail.com', 'pass' => 'password123', 'role' => 'professional'],
+        ['name' => 'Dr. Fara', 'email' => 'fara@gmail.com', 'pass' => 'password123', 'role' => 'professional'],
+        ['name' => 'Test Mother', 'email' => 'mother@gmail.com', 'pass' => 'password123', 'role' => 'mother'],
+        ['name' => 'Test Admin', 'email' => 'admin@gmail.com', 'pass' => 'password123', 'role' => 'admin']
     ];
 
     foreach ($testUsers as $user) {
