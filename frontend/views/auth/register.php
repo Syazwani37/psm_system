@@ -24,7 +24,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (strpos($email, '@') === false) {
         $error = "Invalid email formatting! Missing '@' symbol.";
     } else if ($role === 'professional') {
-        $allowed = ['hanan@psm.com', 'izzah@psm.com', 'fara@psm.com'];
+        $allowed = [
+            'hanan@gmail.com', 'izzah@gmail.com', 'fara@gmail.com'
+        ];
         if (!in_array(strtolower($email), $allowed)) {
             $error = "Unauthorized email! Only Dr. Hanan, Dr. Izzah, and Dr. Fara can register as Professionals.";
         }

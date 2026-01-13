@@ -26,7 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Professional Access Restriction
         if ($user['role'] === 'professional') {
-            $allowed_profs = ['hanan@psm.com', 'izzah@psm.com', 'fara@psm.com'];
+            $allowed_profs = [
+                'hanan@gmail.com', 'izzah@gmail.com', 'fara@gmail.com'
+            ];
             if (!in_array(strtolower($user['email']), $allowed_profs)) {
                 $error = "Access denied! This professional account is unauthorized.";
             }
