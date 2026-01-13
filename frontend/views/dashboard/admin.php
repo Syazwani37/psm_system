@@ -258,8 +258,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_UR
             </div>
             <div>
                 <h2 class="mb-2" style="color: #4A148C;">
-                    Welcome, <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo escape($userName); ?> 👋
+                    Welcome, Admin 👋
                 </h2>
                 <p class="text-muted mb-3">Overview of system performance and health metrics.</p>
                 <span class="badge px-3 py-2" style="background: #E1BEE7; color: #4A148C;">
