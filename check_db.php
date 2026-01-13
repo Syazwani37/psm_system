@@ -1,3 +1,6 @@
+<?php
+require_once __DIR__ . '/backend/config/database.php';
+
 echo "<h3>Professionals (Experts)</h3>";
 $result = mysqli_query($conn, "SELECT id, name, email FROM users WHERE role='professional'");
 while ($row = mysqli_fetch_assoc($result)) {
