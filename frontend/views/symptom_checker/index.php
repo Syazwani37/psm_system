@@ -109,7 +109,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     /* Result Card Styles */
     #resultArea {
         margin-top: 2rem;
-        /* display: none; Managed by PHP/JS */
+        display: none; /* Initially hidden, shown by JavaScript */
         animation: fadeIn 0.5s ease;
     }
 
@@ -124,9 +124,9 @@ require_once BASE_PATH . '/backend/includes/header.php';
         text-align: center;
     }
 
-    .result-safe { background: #F1F8F5; color: #2F5D48; }
-    .result-warning { background: #FFF8F1; color: #9C4221; }
-    .result-danger { background: #FEF2F2; color: #991B1B; }
+    .result-low { background: #F1F8F5; color: #2F5D48; }
+    .result-medium { background: #FFF8F1; color: #9C4221; }
+    .result-high { background: #FEF2F2; color: #991B1B; }
 </style>
 
 <!-- Decorative Blob -->
@@ -149,13 +149,13 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo getDash
         <?php
 require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlashMessage(); ?>
 
-        <form method="POST" action="">
+        <form id="symptomForm">
             <div class="form-grid">
                 <div class="mb-3">
                     <label class="form-label fw-bold small text-muted">
                         <i class="fas fa-calendar-week me-2 text-primary"></i>Weeks Postpartum
                     </label>
-                    <input type="number" name="week" class="form-control" min="0" max="52" 
+                    <input type="number" id="week" class="form-control" min="0" max="52"
                            placeholder="e.g. 2" required>
                 </div>
 
@@ -163,13 +163,13 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
                     <label class="form-label fw-bold small text-muted">
                         <i class="fas fa-thermometer-half me-2 text-primary"></i>Temperature (°C)
                     </label>
-                    <input type="number" name="temp" class="form-control" step="0.1" min="0" 
+                    <input type="number" id="temp" class="form-control" step="0.1" min="0"
                            placeholder="e.g. 36.5" required>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label fw-bold small text-muted">Pain Level</label>
-                    <select name="pain" class="form-select" required>
+                    <select id="pain" class="form-select" required>
                         <option value="" disabled selected>Select...</option>
                         <option value="no">No Pain</option>
                         <option value="yes">Yes, Mild</option>
@@ -179,7 +179,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
 
                 <div class="mb-3">
                     <label class="form-label fw-bold small text-muted">Wound Condition</label>
-                    <select name="wound" class="form-select" required>
+                    <select id="wound" class="form-select" required>
                         <option value="" disabled selected>Select...</option>
                         <option value="yes">Healed / Dry</option>
                         <option value="no">Red / Swollen / Wet</option>
@@ -188,7 +188,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
 
                 <div class="mb-3">
                     <label class="form-label fw-bold small text-muted">Bleeding</label>
-                    <select name="bleeding" class="form-select" required>
+                    <select id="bleeding" class="form-select" required>
                         <option value="" disabled selected>Select...</option>
                         <option value="none">None / Light Spotting</option>
                         <option value="light">Moderate</option>
@@ -198,7 +198,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
 
                 <div class="mb-3">
                     <label class="form-label fw-bold small text-muted">Mood</label>
-                    <select name="mood" class="form-select" required>
+                    <select id="mood" class="form-select" required>
                         <option value="" disabled selected>Select...</option>
                         <option value="happy">Calm / Happy</option>
                         <option value="sad">Sad / Anxious</option>
@@ -208,12 +208,12 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; displayFlash
             </div>
 
             <!-- Result Area -->
-            <div id="resultArea" style="display: <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo ($save_status == 'success') ? 'block' : 'none'; ?>;">
+            <div id="resultArea">
                 <div id="resultCard" class="result-card">
                     <div id="resultIcon" style="font-size: 2.5rem; margin-bottom: 1rem;"></div>
                     <h3 id="resultTitle" style="margin-bottom: 0.5rem; font-family: 'Playfair Display', serif;"></h3>
                     <p id="resultText"></p>
+                    <div id="resultRecommendation" class="mt-3"></div>
                 </div>
             </div>
 
@@ -227,55 +227,131 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo ($save_
 </div>
 
 <script>
-<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if ($save_status == 'success'): ?>
-    const temp = <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $temp; ?>;
-    const bleeding = "<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $bleeding; ?>";
-    const pain = "<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $pain; ?>";
-    const wound = "<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $wound; ?>";
-    const mood = "<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $mood; ?>";
+    document.getElementById('symptomForm').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-    const resultCard = document.getElementById("resultCard");
-    const resultIcon = document.getElementById("resultIcon");
-    const resultTitle = document.getElementById("resultTitle");
-    const resultText = document.getElementById("resultText");
+        // Get form values
+        const week = document.getElementById('week').value;
+        const temp = parseFloat(document.getElementById('temp').value);
+        const pain = document.getElementById('pain').value;
+        const wound = document.getElementById('wound').value;
+        const bleeding = document.getElementById('bleeding').value;
+        const mood = document.getElementById('mood').value;
 
-    let status = 'safe';
-    let title = "All Looks Good";
-    let message = "Your recovery appears to be on track. Continue your healthy habits!";
-    let icon = "<i class='fas fa-check-circle'></i>";
-    let cardClass = "result-card result-safe";
+        // Prepare symptoms array based on selections
+        const symptoms = [];
 
-    if (temp > 38 || bleeding === 'heavy' || pain === 'severe' || wound === 'no' || mood === 'very sad') {
-        status = 'danger';
-        title = "Attention Needed";
-        message = "Some symptoms require medical attention. Please consult a doctor immediately.";
-        icon = "<i class='fas fa-exclamation-circle'></i>";
-        cardClass = "result-card result-danger";
-    } else if (mood === 'sad' || pain === 'yes') {
-        status = 'warning';
-        title = "Monitor Closely";
-        message = "Keep an eye on these symptoms. Take rest and stay hydrated.";
-        icon = "<i class='fas fa-info-circle'></i>";
-        cardClass = "result-card result-warning";
+        if (pain !== 'no') symptoms.push(pain === 'severe' ? 'severe_pain' : 'mild_pain');
+        if (wound === 'no') symptoms.push('wound_issues');
+        if (bleeding === 'heavy') symptoms.push('heavy_bleeding');
+        if (bleeding === 'light') symptoms.push('moderate_bleeding');
+        if (mood === 'sad') symptoms.push('mood_changes');
+        if (mood === 'very sad') symptoms.push('severe_mood_changes');
+        if (temp > 38.0) symptoms.push('fever');
+
+        // Prepare data for API
+        const data = {
+            week_postpartum: parseInt(week),
+            temperature: temp,
+            pain_level: pain === 'severe' ? 8 : (pain === 'yes' ? 5 : 0),
+            bleeding_status: bleeding,
+            wound_condition: wound,
+            mood_status: mood,
+            symptoms: symptoms
+        };
+
+        // Show loading state
+        const submitBtn = document.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Assessing...';
+        submitBtn.disabled = true;
+
+        // Call the decision tree API
+        fetch('<?php echo BASE_URL; ?>/backend/api/symptom_checker/assess.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                displayAssessmentResult(result.assessment);
+            } else {
+                alert('Error: ' + result.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while assessing symptoms.');
+        })
+        .finally(() => {
+            // Restore button
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
+    });
+
+    function displayAssessmentResult(assessment) {
+        const resultCard = document.getElementById("resultCard");
+        const resultIcon = document.getElementById("resultIcon");
+        const resultTitle = document.getElementById("resultTitle");
+        const resultText = document.getElementById("resultText");
+        const resultRecommendation = document.getElementById("resultRecommendation");
+
+        // Set result based on risk level
+        let title = "";
+        let message = "";
+        let icon = "";
+        let cardClass = "result-card ";
+
+        switch(assessment.risk_level) {
+            case 'high':
+                title = "Immediate Attention Needed";
+                message = "Your symptoms indicate a potentially serious condition.";
+                icon = "<i class='fas fa-exclamation-triangle'></i>";
+                cardClass += "result-high";
+                break;
+            case 'medium':
+                title = "Medical Consultation Recommended";
+                message = "Your symptoms warrant professional evaluation.";
+                icon = "<i class='fas fa-exclamation-circle'></i>";
+                cardClass += "result-medium";
+                break;
+            case 'low':
+            default:
+                title = "Recovery on Track";
+                message = "Your symptoms appear to be within normal recovery parameters.";
+                icon = "<i class='fas fa-check-circle'></i>";
+                cardClass += "result-low";
+                break;
+        }
+
+        // Update the display
+        resultCard.className = cardClass;
+        resultIcon.innerHTML = icon;
+        resultTitle.innerText = title;
+        resultText.innerText = message;
+
+        // Add specific recommendation
+        resultRecommendation.innerHTML = `
+            <div class="alert mt-3" style="background: rgba(255,255,255,0.7); border-radius: 12px; padding: 1rem;">
+                <strong>Recommendation:</strong> ${assessment.recommendation}
+                ${assessment.action === 'emergency_consultation' ?
+                    '<div class="mt-2"><a href="<?php echo BASE_URL; ?>/frontend/views/consultations/book.php" class="btn btn-danger btn-sm">Book Emergency Consultation</a></div>' :
+                    assessment.action === 'schedule_consultation' ?
+                    '<div class="mt-2"><a href="<?php echo BASE_URL; ?>/frontend/views/consultations/book.php" class="btn btn-warning btn-sm">Schedule Consultation</a></div>' :
+                    '<div class="mt-2"><a href="<?php echo BASE_URL; ?>/frontend/views/consultations/book.php" class="btn btn-primary btn-sm">Book Consultation</a></div>'}
+            </div>
+        `;
+
+        // Show result area and scroll to it
+        document.getElementById("resultArea").style.display = "block";
+        setTimeout(() => {
+            document.getElementById("resultArea").scrollIntoView({ behavior: 'smooth' });
+        }, 100);
     }
-
-    resultCard.className = cardClass;
-    resultIcon.innerHTML = icon;
-    resultTitle.innerText = title;
-    resultText.innerText = message;
-    
-    // Scroll to result
-    setTimeout(() => {
-        document.getElementById("resultArea").scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
 </script>
 
 <?php
