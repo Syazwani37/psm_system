@@ -12,19 +12,19 @@ require_once dirname(__FILE__, 1) . '/backend/config/database.php';
 $experts = [
     [
         'name' => 'Dr. Hanan',
-        'email' => 'hanan@psm.com',
+        'email' => 'hanan@gmail.com',
         'password' => 'password123',
         'role' => 'professional'
     ],
     [
         'name' => 'Dr. Izzah',
-        'email' => 'izzah@psm.com',
+        'email' => 'izzah@gmail.com',
         'password' => 'password123',
         'role' => 'professional'
     ],
     [
         'name' => 'Dr. Fara',
-        'email' => 'fara@psm.com',
+        'email' => 'fara@gmail.com',
         'password' => 'password123',
         'role' => 'professional'
     ]

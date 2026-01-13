@@ -160,15 +160,15 @@
         const password = document.getElementById('password').value;
         
         // Demo credentials
-        if (email === 'mother@demo.com' && password === 'demo123') {
+        if (email === 'mother@gmail.com' && password === 'demo123') {
             window.location.href = 'dashboard/mother.html';
-        } else if (email === 'professional@demo.com' && password === 'demo123') {
+        } else if (email === 'professional@gmail.com' && password === 'demo123') {
             window.location.href = 'dashboard/professional.html';
-        } else if (email === 'admin@demo.com' && password === 'demo123') {
+        } else if (email === 'admin@gmail.com' && password === 'demo123') {
             window.location.href = 'dashboard/admin.html';
         } else {
             document.getElementById('errorAlert').classList.remove('d-none');
-            document.getElementById('errorMessage').textContent = 'Invalid email or password. Try: mother@demo.com / demo123';
+            document.getElementById('errorMessage').textContent = 'Invalid email or password. Try: mother@gmail.com / demo123';
         }
     });
 </script>
