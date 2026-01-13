@@ -30,6 +30,20 @@ try {
     $reason = mysqli_real_escape_string($conn, $data['reason'] ?? 'Routine Checkup');
     $status = 'pending';
 
+    // Check if the time slot is already booked for this professional
+    $check_sql = "SELECT id FROM consultations
+                  WHERE professional_id = $professional_id
+                  AND scheduled_at = '$scheduled_at'
+                  AND status IN ('pending', 'accepted', 'rescheduled')";
+
+    $check_result = mysqli_query($conn, $check_sql);
+
+    if (mysqli_num_rows($check_result) > 0) {
+        // Time slot is already booked
+        echo json_encode(['success' => false, 'message' => 'This time slot is already booked. Please select a different time.']);
+        exit;
+    }
+
     // Insert into database
     $sql = "INSERT INTO consultations (user_id, professional_id, scheduled_at, reason, status)
             VALUES ($user_id, $professional_id, '$scheduled_at', '$reason', '$status')";
