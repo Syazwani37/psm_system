@@ -28,6 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!in_array(strtolower($email), $allowed)) {
             $error = "Unauthorized email! Only Dr. Hanan, Dr. Izzah, and Dr. Fara can register as Professionals.";
         }
+    } else {
+        // Enforce @gmail.com for Mothers and Admins
+        if (!preg_match('/@gmail\.com$/i', $email)) {
+            $error = "Invalid email domain! Please use a correctly spelled '@gmail.com' address.";
+        }
     }
 
     if (!$error) {
@@ -143,6 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="email" name="email" class="form-control form-control-lg" 
                        placeholder="Enter email" required
                        style="border-radius: 12px; border: 1px solid #EEE;">
+                <small class="text-muted" style="font-size: 0.8rem;">Required: <strong>@gmail.com</strong> (for Mothers/Admins)</small>
             </div>
 
             <div class="mb-3">
