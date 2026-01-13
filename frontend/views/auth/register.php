@@ -20,20 +20,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = mysqli_real_escape_string($conn, $_POST['password']);
     $role = mysqli_real_escape_string($conn, $_POST['role']);
 
-    // Check if email exists
-    $check_query = "SELECT * FROM users WHERE email='$email'";
-    $result = mysqli_query($conn, $check_query);
+    // Registration Validation & Restrictions
+    if (strpos($email, '@') === false) {
+        $error = "Invalid email formatting! Missing '@' symbol.";
+    } else if ($role === 'professional') {
+        $allowed = ['hanan@psm.com', 'izzah@psm.com', 'fara@psm.com'];
+        if (!in_array(strtolower($email), $allowed)) {
+            $error = "Unauthorized email! Only Dr. Hanan, Dr. Izzah, and Dr. Fara can register as Professionals.";
+        }
+    }
 
-    if (mysqli_num_rows($result) > 0) {
-        $error = "Email already registered!";
-    } else {
-        $sql = "INSERT INTO users (name, email, password, role) VALUES ('$name', '$email', '$password', '$role')";
+    if (!$error) {
+        // Check if email exists
+        $check_query = "SELECT * FROM users WHERE email='$email'";
+        $result = mysqli_query($conn, $check_query);
 
-        if (mysqli_query($conn, $sql)) {
-            $success = "Registration successful! Redirecting to login...";
-            echo "<script>setTimeout(() => { window.location.href = 'login.php'; }, 2000);</script>";
+        if (mysqli_num_rows($result) > 0) {
+            $error = "Email already registered!";
         } else {
-            $error = "Error: " . mysqli_error($conn);
+            $sql = "INSERT INTO users (name, email, password, role) VALUES ('$name', '$email', '$password', '$role')";
+
+            if (mysqli_query($conn, $sql)) {
+                $success = "Registration successful! Redirecting to login...";
+                echo "<script>setTimeout(() => { window.location.href = 'login.php'; }, 2000);</script>";
+            } else {
+                $error = "Error: " . mysqli_error($conn);
+            }
         }
     }
 }
@@ -104,25 +116,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p class="text-muted mb-0">Start your journey with us</p>
         </div>
 
-        <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if ($error): ?>
+        <?php if ($error): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i><?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $error; ?>
+                <i class="fas fa-exclamation-circle me-2"></i><?php echo $error; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
+        <?php endif; ?>
 
-        <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if ($success): ?>
+        <?php if ($success): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i><?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $success; ?>
+                <i class="fas fa-check-circle me-2"></i><?php echo $success; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
+        <?php endif; ?>
 
         <form method="POST" action="">
             <div class="mb-3">
@@ -171,7 +177,4 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
     </div>
 </div>
 
-<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
-
-
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>

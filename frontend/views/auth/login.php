@@ -24,12 +24,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_num_rows($result) == 1) {
         $user = mysqli_fetch_assoc($result);
         
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['name'] = $user['name'];
-        $_SESSION['role'] = $user['role'];
+        // Professional Access Restriction
+        if ($user['role'] === 'professional') {
+            $allowed_profs = ['hanan@psm.com', 'izzah@psm.com', 'fara@psm.com'];
+            if (!in_array(strtolower($user['email']), $allowed_profs)) {
+                $error = "Access denied! This professional account is unauthorized.";
+            }
+        }
 
-        // Redirect based on role
-        redirectToDashboard($user['role']);
+        if (!$error) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['name'] = $user['name'];
+            $_SESSION['role'] = $user['role'];
+
+            // Redirect based on role
+            redirectToDashboard($user['role']);
+        }
     } else {
         $error = "Invalid email or password.";
     }
@@ -39,8 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <style>
     body {
-        background: url('<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/assets/images/mom_and_baby_background.jpg') no-repeat center center/cover;
+        background: url('<?php echo BASE_URL; ?>/frontend/assets/images/mom_and_baby_background.jpg') no-repeat center center/cover;
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -145,15 +154,12 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_UR
             <p class="text-muted mb-0">Please log in to continue</p>
         </div>
 
-        <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; if ($error): ?>
+        <?php if ($error): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i><?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $error; ?>
+                <i class="fas fa-exclamation-circle me-2"></i><?php echo $error; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-        <?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
+        <?php endif; ?>
 
         <form method="POST" action="">
             <div class="mb-3">
@@ -186,7 +192,4 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; endif; ?>
     </div>
 </div>
 
-<?php
-require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
-
-
+<?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
