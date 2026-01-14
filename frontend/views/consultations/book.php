@@ -180,21 +180,24 @@ require_once BASE_PATH . '/backend/includes/header.php';
     }
 
     .toast-custom {
-        background: #333;
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 12px;
+        background: #333 !important;
+        color: white !important;
+        padding: 1.5rem 2rem !important; /* Larger padding */
+        border-radius: 12px !important;
         margin-top: 10px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: 1rem;
         animation: fadeInUp 0.3s ease-out;
-        font-weight: 500;
-        border: 2px solid rgba(255,255,255,0.2);
+        font-weight: 600;
+        border: 3px solid rgba(255,255,255,0.8) !important; /* Thicker White Border */
+        z-index: 9999 !important;
+        min-width: 300px;
+        font-size: 1.1rem;
     }
-    .toast-custom.success { background: #43A047; border: 2px solid #2E7D32; }
-    .toast-custom.error { background: #E53935; border: 2px solid #B71C1C; }
+    .toast-custom.success { background: #43A047 !important; border: 3px solid #1B5E20 !important; }
+    .toast-custom.error { background: #E53935 !important; border: 3px solid #B71C1C !important; }
     
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(20px); }
