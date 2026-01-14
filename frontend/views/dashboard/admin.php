@@ -402,13 +402,13 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats[
         <div class="col-lg-8">
             <div class="chart-card">
                 <h6><i class="fas fa-chart-line me-2"></i>User Registrations (Last 7 Days)</h6>
-                <canvas id="userRegistrationChart" height="80"></canvas>
+                <canvas id="userRegistrationChart" height="50"></canvas>
             </div>
         </div>
         <div class="col-lg-4">
             <div class="chart-card">
                 <h6><i class="fas fa-heartbeat me-2"></i>Symptom Logs by Risk Level</h6>
-                <canvas id="riskLevelChart" height="120"></canvas>
+                <canvas id="riskLevelChart" height="60"></canvas>
             </div>
         </div>
     </div>
@@ -418,7 +418,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats[
         <div class="col-12">
             <div class="chart-card">
                 <h6><i class="fas fa-calendar-check me-2"></i>Consultations by Status</h6>
-                <canvas id="consultStatusChart" height="40"></canvas>
+                <canvas id="consultStatusChart" height="30"></canvas>
             </div>
         </div>
     </div>
