@@ -1,8 +1,7 @@
 <?php
 require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
- * PSM System - Baby Growth Tracker (With WHO Standards)
- * Frontend View: Baby Growth Module
+ * PSM System - Baby Growth Tracker (Separated Charts)
  */
 
 $page_title = "Baby Growth Tracker - PSM System";
@@ -13,14 +12,6 @@ requireLogin('mother');
 
 $user_id = $_SESSION['user_id'];
 $msg = "";
-
-// Initialize / Update Settings (Birth Date & Gender)
-// We'll trust POST or keep existing logic. Since DB doesn't have birth_date column easily, 
-// we'll rely on LocalStorage for simplicity on the frontend, OR handle a quick session save if possible.
-// Actually, to make the graph consistent across refreshes, we should ideally save it.
-// But as per plan, we'll try to use a frontend-only approach for the reference lines first to avoid heavy DB migration.
-// Wait, user asked to "import database". I will add basic saving to a new table or just use local storage for the "Settings" part to be non-intrusive.
-// DECISION: Use LocalStorage for "Graph Settings" (Gender/DOB) for now to keep it simple and responsive.
 
 // Handle Form Submission (Add Growth Record)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_growth'])) {
@@ -61,17 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['toggle_milestone'])) {
 }
 
 // Fetch Growth Data for Chart
-$dates = [];
-$weights = [];
-$heights = [];
-$full_records = []; // Store full objects to pass to JS for date calculation
-
+$full_records = []; 
 $query = "SELECT * FROM baby_growth WHERE user_id = $user_id ORDER BY recorded_at ASC";
 $result = mysqli_query($conn, $query);
 while($row = mysqli_fetch_assoc($result)) {
-    $dates[] = date('M d', strtotime($row['recorded_at']));
-    $weights[] = (float)$row['weight_kg'];
-    $heights[] = (float)$row['height_cm'];
     $full_records[] = [
         'date' => $row['recorded_at'],
         'weight' => (float)$row['weight_kg'],
@@ -99,15 +83,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
     .milestone-label { cursor: pointer; flex-grow: 1; font-weight: 500; color: #555; }
     .milestone-label.done { text-decoration: line-through; color: #aaa; }
     .card-header-custom { border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 1.5rem; }
-    
-    /* WHO Settings Panel */
-    .who-settings {
-        background: #E8EAF6;
-        border-radius: 15px;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
-        border: 1px solid #C5CAE9;
-    }
+    .who-settings { background: #E8EAF6; border-radius: 15px; padding: 1rem; margin-bottom: 1.5rem; border: 1px solid #C5CAE9; }
 </style>
 
 <div class="container py-5" style="max-width: 1000px;">
@@ -123,34 +99,30 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
     <div class="row g-4">
         
-        <!-- Graph Settings (WHO) -->
+        <!-- WHO Settings -->
         <div class="col-12">
             <div class="who-settings d-flex flex-wrap align-items-center justify-content-between">
                 <div class="d-flex align-items-center mb-2 mb-md-0">
                     <i class="fas fa-globe-americas me-2 text-primary"></i>
-                    <strong class="me-3" style="color: #3f51b5;">WHO Standards Comparison</strong>
+                    <strong class="me-3" style="color: #3f51b5;">WHO Standards Settings</strong>
                 </div>
                 <div class="d-flex gap-3 align-items-center">
                     <div>
                         <small class="text-muted d-block">Baby's Birth Date:</small>
-                        <input type="date" id="babyDob" class="form-control form-control-sm" onchange="updateChart()">
+                        <input type="date" id="babyDob" class="form-control form-control-sm" onchange="updateCharts()">
                     </div>
                     <div>
                         <small class="text-muted d-block">Gender:</small>
-                        <select id="babyGender" class="form-select form-select-sm" onchange="updateChart()">
+                        <select id="babyGender" class="form-select form-select-sm" onchange="updateCharts()">
                             <option value="boy">Boy</option>
                             <option value="girl">Girl</option>
                         </select>
-                    </div>
-                    <div class="form-check form-switch pt-3">
-                        <input class="form-check-input" type="checkbox" id="showWho" checked onchange="updateChart()">
-                        <label class="form-check-label small" for="showWho">Show Reference</label>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Growth Entry Form -->
+        <!-- Forms & Milestones -->
         <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100" style="border-radius: 20px;">
                 <div class="card-body p-4">
@@ -185,7 +157,6 @@ require_once BASE_PATH . '/backend/includes/header.php';
             </div>
         </div>
 
-        <!-- Milestones -->
         <div class="col-md-6">
             <div class="card border-0 shadow-sm h-100" style="border-radius: 20px;">
                 <div class="card-body p-4">
@@ -223,32 +194,49 @@ require_once BASE_PATH . '/backend/includes/header.php';
             </div>
         </div>
 
-        <!-- Growth Chart -->
+        <!-- NEW: CHART 1 (WEIGHT) -->
         <div class="col-12">
-            <div class="card border-0 shadow-sm" style="border-radius: 20px;">
+            <div class="card border-0 shadow-sm mb-4" style="border-radius: 20px;">
                 <div class="card-body p-4">
-                    <div class="card-header-custom">
-                        <h5 class="mb-0 fw-bold" style="color: #26C6DA;">
-                            <i class="fas fa-chart-line me-2"></i> Growth Chart vs WHO Standards
+                    <div class="card-header-custom d-flex justify-content-between">
+                        <h5 class="mb-0 fw-bold" style="color: #9575CD;">
+                            <i class="fas fa-weight me-2"></i> Weight Chart (kg)
                         </h5>
+                        <small class="text-muted">Standards: WHO Child Growth</small>
                     </div>
-                    <div style="height: 400px;">
-                        <canvas id="growthChart"></canvas>
+                    <div style="height: 350px;">
+                        <canvas id="weightChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- NEW: CHART 2 (HEIGHT) -->
+        <div class="col-12">
+            <div class="card border-0 shadow-sm" style="border-radius: 20px;">
+                <div class="card-body p-4">
+                    <div class="card-header-custom d-flex justify-content-between">
+                        <h5 class="mb-0 fw-bold" style="color: #26C6DA;">
+                            <i class="fas fa-ruler-vertical me-2"></i> Height Chart (cm)
+                        </h5>
+                        <small class="text-muted">Standards: WHO Child Growth</small>
+                    </div>
+                    <div style="height: 350px;">
+                        <canvas id="heightChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
-    // 1. Prepare Data from PHP
     const userRecords = <?php echo json_encode($full_records); ?>;
     
-    // 2. WHO P50 Data (0-12 Months)
+    // WHO P50 Data (0-12 Months)
     const WHO_DATA = {
         boy: {
-            // Month 0 to 12
             weight: [3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 7.9, 8.3, 8.6, 8.9, 9.2, 9.4, 9.6],
             height: [49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6, 69.2, 70.6, 72.0, 73.3, 74.5, 75.7]
         },
@@ -258,26 +246,23 @@ require_once BASE_PATH . '/backend/includes/header.php';
         }
     };
 
-    let chartInstance = null;
+    let weightChartInstance = null;
+    let heightChartInstance = null;
 
-    // 3. Initialize Settings from LocalStorage
+    // Load Settings
     const savedDob = localStorage.getItem('psm_baby_dob');
     const savedGender = localStorage.getItem('psm_baby_gender');
     
     if(savedDob) document.getElementById('babyDob').value = savedDob;
     if(savedGender) document.getElementById('babyGender').value = savedGender;
 
-    // 4. Main Chart Function
-    function updateChart() {
+    function updateCharts() {
         const dobStr = document.getElementById('babyDob').value;
-        const gender = document.getElementById('babyGender').value; // 'boy' or 'girl'
-        const showWho = document.getElementById('showWho').checked;
+        const gender = document.getElementById('babyGender').value;
         
-        // Save settings
         localStorage.setItem('psm_baby_dob', dobStr);
         localStorage.setItem('psm_baby_gender', gender);
         
-        // Process User Data
         const labels = [];
         const weightData = [];
         const heightData = [];
@@ -285,30 +270,22 @@ require_once BASE_PATH . '/backend/includes/header.php';
         const whoHeightData = [];
         
         userRecords.forEach(record => {
-            // Check if valid numbers
             if(record.weight > 0 || record.height > 0) {
-                // Formatting Date Label
                 const d = new Date(record.date);
                 labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
                 
                 weightData.push(record.weight > 0 ? record.weight : null);
                 heightData.push(record.height > 0 ? record.height : null);
                 
-                // Calculate WHO point
-                if (dobStr && showWho) {
+                if (dobStr) {
                     const dob = new Date(dobStr);
                     const recordDate = new Date(record.date);
-                    
-                    // Diff in months (approx)
                     let monthsDiff = (recordDate.getFullYear() - dob.getFullYear()) * 12;
                     monthsDiff -= dob.getMonth();
                     monthsDiff += recordDate.getMonth();
                     
-                    // Adjust for days (simple approximation: <15 days = previous month, >15 = next)
-                    // Better: just round to nearest integer month index [0-12]
-                    // If age is negative (record before birth), ignore or set 0
                     if (monthsDiff < 0) monthsDiff = 0; 
-                    if (monthsDiff > 12) monthsDiff = 12; // Cap at 12 for this dataset
+                    if (monthsDiff > 12) monthsDiff = 12;
                     
                     whoWeightData.push(WHO_DATA[gender].weight[monthsDiff]);
                     whoHeightData.push(WHO_DATA[gender].height[monthsDiff]);
@@ -319,106 +296,90 @@ require_once BASE_PATH . '/backend/includes/header.php';
             }
         });
 
-        const ctx = document.getElementById('growthChart').getContext('2d');
-        
-        if (chartInstance) {
-            chartInstance.destroy();
-        }
+        // --- RENDER WEIGHT CHART ---
+        const wCtx = document.getElementById('weightChart').getContext('2d');
+        if (weightChartInstance) weightChartInstance.destroy();
 
-        chartInstance = new Chart(ctx, {
+        weightChartInstance = new Chart(wCtx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [
-                    // User Weight
                     {
-                        label: 'Your Baby Weight (kg)',
+                        label: 'Baby Weight (kg)',
                         data: weightData,
                         borderColor: '#9575CD',
                         backgroundColor: 'rgba(149, 117, 205, 0.1)',
                         fill: true,
-                        tension: 0.4,
-                        yAxisID: 'y'
+                        tension: 0.4
                     },
-                    // User Height
                     {
-                        label: 'Your Baby Height (cm)',
-                        data: heightData,
-                        borderColor: '#26C6DA',
-                        fill: false,
-                        tension: 0.4,
-                        yAxisID: 'y1'
-                    },
-                    // WHO Weight
-                    {
-                        label: `WHO ${gender === 'boy' ? 'Boy' : 'Girl'} Standard (Weight)`,
+                        label: `WHO ${gender === 'boy' ? 'Boy' : 'Girl'} Standard`,
                         data: whoWeightData,
                         borderColor: '#B0BEC5',
                         borderDash: [5, 5],
-                        pointRadius: 0,
                         borderWidth: 2,
                         fill: false,
                         tension: 0.4,
-                        yAxisID: 'y',
-                        hidden: !showWho
-                    },
-                    // WHO Height
-                    {
-                        label: `WHO ${gender === 'boy' ? 'Boy' : 'Girl'} Standard (Height)`,
-                        data: whoHeightData,
-                        borderColor: '#90A4AE',
-                        borderDash: [2, 2],
-                        pointRadius: 0,
-                        borderWidth: 1,
-                        fill: false,
-                        tension: 0.4,
-                        yAxisID: 'y1',
-                        hidden: !showWho
+                        pointRadius: 0
                     }
                 ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false,
-                },
                 scales: {
-                    y: {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        title: { display: true, text: 'Weight (kg)' },
-                    },
-                    y1: {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: { display: true, text: 'Height (cm)' },
-                        grid: { drawOnChartArea: false },
+                    y: { 
+                        beginAtZero: false,
+                        title: { display: true, text: 'Weight (kg)' }
                     }
-                },
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                let label = context.dataset.label || '';
-                                if (label) { label += ': '; }
-                                if (context.parsed.y !== null) { label += context.parsed.y; }
-                                return label;
-                            }
-                        }
+                }
+            }
+        });
+
+        // --- RENDER HEIGHT CHART ---
+        const hCtx = document.getElementById('heightChart').getContext('2d');
+        if (heightChartInstance) heightChartInstance.destroy();
+
+        heightChartInstance = new Chart(hCtx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Baby Height (cm)',
+                        data: heightData,
+                        borderColor: '#26C6DA',
+                        backgroundColor: 'rgba(38, 198, 218, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: `WHO ${gender === 'boy' ? 'Boy' : 'Girl'} Standard`,
+                        data: whoHeightData,
+                        borderColor: '#90A4AE',
+                        borderDash: [5, 5],
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.4,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { 
+                        beginAtZero: false,
+                        title: { display: true, text: 'Height (cm)' }
                     }
                 }
             }
         });
     }
 
-    // Initial Load
-    document.addEventListener('DOMContentLoaded', updateChart);
-
+    document.addEventListener('DOMContentLoaded', updateCharts);
 </script>
 
 <?php require_once dirname(__FILE__, 4) . '/backend/config/database.php'; require_once BASE_PATH . '/backend/includes/footer.php'; ?>
