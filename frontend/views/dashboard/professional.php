@@ -16,10 +16,43 @@ requireLogin('professional');
 require_once BASE_PATH . '/backend/includes/header.php';
 
 $userName = getUserName();
+$profId = $_SESSION['user_id'];
 
 // Fetch recent symptom logs with reviewer info
 // Logs query removed
 $result_logs = null;
+
+// --------------------------------------------------------------------------
+// Chart Data: Symptom Logs by Risk Level (all patients)
+// --------------------------------------------------------------------------
+$chart_risk_labels = ['Low', 'Medium', 'High'];
+$chart_risk_data = [
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE result_status = 'low'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE result_status = 'medium'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE result_status = 'high'"))['c'] ?? 0,
+];
+
+// --------------------------------------------------------------------------
+// Chart Data: My Consultations (as professional)
+// --------------------------------------------------------------------------
+$chart_consult_labels = ['Pending', 'Accepted', 'Completed'];
+$chart_consult_data = [
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE professional_id = $profId AND status = 'pending'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE professional_id = $profId AND status = 'accepted'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE professional_id = $profId AND status = 'completed'"))['c'] ?? 0,
+];
+
+// --------------------------------------------------------------------------
+// Chart Data: New Patients (last 7 days)
+// --------------------------------------------------------------------------
+$chart_patient_labels = [];
+$chart_patient_data = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $chart_patient_labels[] = date('M d', strtotime($date));
+    $count = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM users WHERE role='mother' AND DATE(created_at) = '$date'"))['c'] ?? 0;
+    $chart_patient_data[] = (int)$count;
+}
 ?>
 
 <style>
@@ -211,6 +244,19 @@ $result_logs = null;
         width: 400px;
         height: 400px;
     }
+
+    .chart-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 1rem;
+    }
+    .chart-card h6 {
+        color: #00695C;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
 </style>
 
 <!-- Decorative Blobs -->
@@ -358,6 +404,29 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_UR
                     View Requests <i class="fas fa-arrow-right ms-1"></i>
                 </span>
             </a>
+        </div>
+    </div>
+
+    <!-- Analytics Charts -->
+    <h5 class="mb-3 mt-4"><i class="fas fa-chart-bar me-2 text-secondary"></i>Quick Analytics</h5>
+    <div class="row g-4 mb-4">
+        <div class="col-lg-4">
+            <div class="chart-card">
+                <h6><i class="fas fa-heartbeat me-2"></i>Patient Risk Distribution</h6>
+                <canvas id="riskDistChart" height="180"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="chart-card">
+                <h6><i class="fas fa-calendar-check me-2"></i>My Consultations</h6>
+                <canvas id="myConsultChart" height="180"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="chart-card">
+                <h6><i class="fas fa-user-plus me-2"></i>New Mothers (7 Days)</h6>
+                <canvas id="newPatientsChart" height="180"></canvas>
+            </div>
         </div>
     </div>
 
@@ -709,6 +778,80 @@ function updateNotificationCount() {
     // Reload the page to update the notification count in the header
     // This is a simple solution - in a production app, you might want to update it via AJAX
     location.reload();
+}
+
+// --------------------------------------------------------------------------
+// Chart.js Initialization for Professional Dashboard
+// --------------------------------------------------------------------------
+// Risk Distribution Doughnut
+const riskCtx = document.getElementById('riskDistChart');
+if (riskCtx) {
+    new Chart(riskCtx, {
+        type: 'doughnut',
+        data: {
+            labels: <?php echo json_encode($chart_risk_labels); ?>,
+            datasets: [{
+                data: <?php echo json_encode($chart_risk_data); ?>,
+                backgroundColor: ['#4CAF50', '#FFC107', '#F44336'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+}
+
+// My Consultations Bar
+const consultCtx = document.getElementById('myConsultChart');
+if (consultCtx) {
+    new Chart(consultCtx, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($chart_consult_labels); ?>,
+            datasets: [{
+                label: 'Count',
+                data: <?php echo json_encode($chart_consult_data); ?>,
+                backgroundColor: ['#FFC107', '#4CAF50', '#2196F3'],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+}
+
+// New Patients Line
+const patientCtx = document.getElementById('newPatientsChart');
+if (patientCtx) {
+    new Chart(patientCtx, {
+        type: 'line',
+        data: {
+            labels: <?php echo json_encode($chart_patient_labels); ?>,
+            datasets: [{
+                label: 'New',
+                data: <?php echo json_encode($chart_patient_data); ?>,
+                borderColor: '#009688',
+                backgroundColor: 'rgba(0, 150, 136, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#009688',
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
 }
 </script>
 

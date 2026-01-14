@@ -15,6 +15,29 @@ requireLogin('mother');
 require_once BASE_PATH . '/backend/includes/header.php';
 
 $userName = getUserName();
+$userId = $_SESSION['user_id'];
+
+// --------------------------------------------------------------------------
+// Chart Data: Symptom Logs (Last 7 Days) for this user
+// --------------------------------------------------------------------------
+$chart_symptom_labels = [];
+$chart_symptom_data = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $chart_symptom_labels[] = date('M d', strtotime($date));
+    $count = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE user_id = $userId AND DATE(created_at) = '$date'"))['c'] ?? 0;
+    $chart_symptom_data[] = (int)$count;
+}
+
+// --------------------------------------------------------------------------
+// Chart Data: My Consultation Status
+// --------------------------------------------------------------------------
+$chart_consult_labels = ['Pending', 'Accepted', 'Completed'];
+$chart_consult_data = [
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE user_id = $userId AND status = 'pending'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE user_id = $userId AND status = 'accepted'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE user_id = $userId AND status = 'completed'"))['c'] ?? 0,
+];
 ?>
 
 <style>
@@ -83,6 +106,19 @@ $userName = getUserName();
         height: 400px;
         bottom: -100px;
         right: -100px;
+    }
+
+    .chart-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.25rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 1rem;
+    }
+    .chart-card h6 {
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+        font-weight: 600;
     }
 </style>
 
@@ -290,6 +326,26 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_UR
         </div>
     </div>
 
+    <!-- My Activity Charts -->
+    <div class="d-flex align-items-center gap-2 mb-3 mt-4">
+        <i class="fas fa-chart-bar text-secondary"></i>
+        <h4 class="mb-0 text-secondary">My Activity</h4>
+    </div>
+    <div class="row g-3 mb-4">
+        <div class="col-md-8">
+            <div class="chart-card">
+                <h6><i class="fas fa-heartbeat me-2"></i>My Symptom Logs (Last 7 Days)</h6>
+                <canvas id="mySymptomChart" height="150"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-card">
+                <h6><i class="fas fa-calendar-check me-2"></i>My Consultations</h6>
+                <canvas id="myConsultChart" height="150"></canvas>
+            </div>
+        </div>
+    </div>
+
     <!-- Daily Tips Section -->
     <div class="card p-4" style="background: rgba(255,255,255,0.9);">
         <h5 class="mb-3">
@@ -454,6 +510,57 @@ function markAllNotificationsAsRead() {
 function updateNotificationCount() {
     // Reload the page to update the notification count in the header
     location.reload();
+}
+
+// --------------------------------------------------------------------------
+// Chart.js Initialization for Mother Dashboard
+// --------------------------------------------------------------------------
+// Symptom Logs Chart (Line)
+const symptomCtx = document.getElementById('mySymptomChart');
+if (symptomCtx) {
+    new Chart(symptomCtx, {
+        type: 'line',
+        data: {
+            labels: <?php echo json_encode($chart_symptom_labels); ?>,
+            datasets: [{
+                label: 'Logs',
+                data: <?php echo json_encode($chart_symptom_data); ?>,
+                borderColor: '#D32F2F',
+                backgroundColor: 'rgba(211, 47, 47, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#D32F2F',
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+    });
+}
+
+// My Consultations Doughnut
+const consultCtx = document.getElementById('myConsultChart');
+if (consultCtx) {
+    new Chart(consultCtx, {
+        type: 'doughnut',
+        data: {
+            labels: <?php echo json_encode($chart_consult_labels); ?>,
+            datasets: [{
+                data: <?php echo json_encode($chart_consult_data); ?>,
+                backgroundColor: ['#FFC107', '#4CAF50', '#2196F3'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
 }
 </script>
 
