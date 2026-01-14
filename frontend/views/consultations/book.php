@@ -193,6 +193,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
         font-weight: 500;
     }
     .toast-custom.success { background: #43A047; }
+    .toast-custom.error { background: #E53935; }
     
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(20px); }
@@ -334,23 +335,24 @@ require_once BASE_PATH . '/backend/includes/header.php';
                 // Close Modal
                 closeBooking();
                 // Show Notification
-                showNotification(`✅ Booking request sent to ${doctorName}!`);
+                showNotification(`✅ Booking request sent to ${doctorName}!`, 'success');
             } else {
-                alert(data.message);
+                showNotification(data.message, 'error');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to send booking request.');
+            showNotification('Failed to send booking request.', 'error');
         });
     }
 
-    function showNotification(message) {
+    function showNotification(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        toast.className = 'toast-custom success';
+        toast.className = `toast-custom ${type}`;
 
-        toast.innerHTML = `<i class="fas fa-check-circle"></i> <span>${message}</span>`;
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+        toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
         container.appendChild(toast);
 
         setTimeout(() => {
