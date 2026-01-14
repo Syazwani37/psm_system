@@ -163,19 +163,24 @@ require_once BASE_PATH . '/backend/includes/header.php';
                 <div class="card-body p-4">
                     <div class="card-header-custom">
                         <h5 class="mb-0 fw-bold" style="color: #AB47BC;">
-                            <i class="fas fa-flag me-2"></i> Milestones
+                            <i class="fas fa-flag me-2"></i> Developmental Milestones
                         </h5>
                     </div>
+                    
+                    <div class="alert alert-light border-0 shadow-sm mb-3">
+                        <small class="text-muted"><i class="fas fa-info-circle me-1"></i> Note: Every baby develops at their own pace. These are general ranges.</small>
+                    </div>
+
                     <div style="max-height: 320px; overflow-y: auto;">
                         <?php
                         $milestones_list = [
-                            '1m_smile' => '1 Month: Smiles at people',
-                            '1m_head' => '1 Month: Holds head up briefly',
-                            '2m_eye' => '2 Months: Follows objects',
-                            '4m_roll' => '4 Months: Rolls over',
-                            '6m_sit' => '6 Months: Sits without support',
-                            '9m_crawl' => '9 Months: Crawls',
-                            '12m_walk' => '12 Months: First steps'
+                            '1_2m_smile' => '1-2 Months: Smiles at people',
+                            '1_2m_head' => '1-2 Months: Holds head up briefly',
+                            '2_3m_eye' => '2-3 Months: Follows objects with eyes',
+                            '3_5m_roll' => '3-5 Months: Rolls over (tummy to back)',
+                            '5_7m_sit' => '5-7 Months: Sits without support',
+                            '7_10m_crawl' => '7-10 Months: Starts crawling',
+                            '10_15m_walk' => '10-15 Months: First steps'
                         ];
                         foreach($milestones_list as $id => $name): 
                             $is_done = in_array($id, $achieved);
