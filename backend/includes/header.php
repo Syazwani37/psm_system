@@ -37,5 +37,8 @@ require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo $page_t
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php
 require_once dirname(__FILE__, 3) . '/backend/config/database.php'; echo BASE_URL; ?>/frontend/assets/css/style.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
