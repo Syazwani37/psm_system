@@ -397,28 +397,24 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats[
         </div>
     </div>
 
-    <!-- Charts Row -->
-    <div class="row g-4 mb-4">
-        <div class="col-lg-8">
-            <div class="chart-card">
-                <h6><i class="fas fa-chart-line me-2"></i>User Registrations (Last 7 Days)</h6>
-                <canvas id="userRegistrationChart" height="50"></canvas>
+    <!-- Charts Row - All in one compact row -->
+    <div class="row g-3 mb-3">
+        <div class="col-lg-5">
+            <div class="chart-card" style="padding: 0.75rem;">
+                <h6 style="font-size: 0.85rem; margin-bottom: 0.5rem;"><i class="fas fa-chart-line me-2"></i>User Registrations (7 Days)</h6>
+                <canvas id="userRegistrationChart" height="40"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="chart-card" style="padding: 0.75rem;">
+                <h6 style="font-size: 0.85rem; margin-bottom: 0.5rem;"><i class="fas fa-heartbeat me-2"></i>Risk Levels</h6>
+                <canvas id="riskLevelChart" height="40"></canvas>
             </div>
         </div>
         <div class="col-lg-4">
-            <div class="chart-card">
-                <h6><i class="fas fa-heartbeat me-2"></i>Symptom Logs by Risk Level</h6>
-                <canvas id="riskLevelChart" height="60"></canvas>
-            </div>
-        </div>
-    </div>
-
-    <!-- Consultations Chart -->
-    <div class="row g-4 mb-4">
-        <div class="col-12">
-            <div class="chart-card">
-                <h6><i class="fas fa-calendar-check me-2"></i>Consultations by Status</h6>
-                <canvas id="consultStatusChart" height="30"></canvas>
+            <div class="chart-card" style="padding: 0.75rem;">
+                <h6 style="font-size: 0.85rem; margin-bottom: 0.5rem;"><i class="fas fa-calendar-check me-2"></i>Consultations</h6>
+                <canvas id="consultStatusChart" height="40"></canvas>
             </div>
         </div>
     </div>
