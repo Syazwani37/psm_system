@@ -336,7 +336,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
                 // Show Notification
                 showNotification(`✅ Booking request sent to ${doctorName}!`);
             } else {
-                alert('Error: ' + data.message);
+                alert(data.message);
             }
         })
         .catch(error => {

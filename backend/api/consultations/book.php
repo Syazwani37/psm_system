@@ -40,7 +40,7 @@ try {
 
     if (mysqli_num_rows($check_result) > 0) {
         // Time slot is already booked
-        echo json_encode(['success' => false, 'message' => 'This time slot is already booked. Please select a different time']);
+        echo json_encode(['success' => false, 'message' => 'This slot is already booked. Please select a different time']);
         exit;
     }
 
