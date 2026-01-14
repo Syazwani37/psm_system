@@ -402,19 +402,25 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats[
         <div class="col-lg-5">
             <div class="chart-card" style="padding: 0.75rem;">
                 <h6 style="font-size: 0.85rem; margin-bottom: 0.5rem;"><i class="fas fa-chart-line me-2"></i>User Registrations (7 Days)</h6>
-                <canvas id="userRegistrationChart" height="40"></canvas>
+                <div style="height: 150px; position: relative;">
+                    <canvas id="userRegistrationChart"></canvas>
+                </div>
             </div>
         </div>
         <div class="col-lg-3">
             <div class="chart-card" style="padding: 0.75rem;">
                 <h6 style="font-size: 0.85rem; margin-bottom: 0.5rem;"><i class="fas fa-heartbeat me-2"></i>Risk Levels</h6>
-                <canvas id="riskLevelChart" height="40"></canvas>
+                <div style="height: 150px; position: relative;">
+                    <canvas id="riskLevelChart"></canvas>
+                </div>
             </div>
         </div>
         <div class="col-lg-4">
             <div class="chart-card" style="padding: 0.75rem;">
                 <h6 style="font-size: 0.85rem; margin-bottom: 0.5rem;"><i class="fas fa-calendar-check me-2"></i>Consultations</h6>
-                <canvas id="consultStatusChart" height="40"></canvas>
+                <div style="height: 150px; position: relative;">
+                    <canvas id="consultStatusChart"></canvas>
+                </div>
             </div>
         </div>
     </div>

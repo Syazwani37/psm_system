@@ -335,13 +335,17 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_UR
         <div class="col-md-8">
             <div class="chart-card">
                 <h6><i class="fas fa-heartbeat me-2"></i>My Symptom Logs (Last 7 Days)</h6>
-                <canvas id="mySymptomChart" height="100"></canvas>
+                <div style="height: 150px; position: relative;">
+                    <canvas id="mySymptomChart"></canvas>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="chart-card">
                 <h6><i class="fas fa-calendar-check me-2"></i>My Consultations</h6>
-                <canvas id="myConsultChart" height="100"></canvas>
+                <div style="height: 150px; position: relative;">
+                    <canvas id="myConsultChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
