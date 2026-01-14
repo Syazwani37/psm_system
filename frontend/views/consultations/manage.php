@@ -69,6 +69,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        position: relative;
+        z-index: 100;
     }
 
     .btn-accept { background: #E8F5E9; color: #2E7D32; }
@@ -243,16 +245,21 @@ require_once BASE_PATH . '/backend/includes/header.php';
         });
     }
 
-    function acceptBooking(id) {
-        if(!confirm("Are you sure you want to accept this booking?")) return;
+    // Make functions globally accessible
+    window.acceptBooking = function(id) {
+        console.log("Attempting to accept booking:", id);
+        
+        // Temporarily bypass confirm to test clickability
+        // if(!confirm("Are you sure you want to accept this booking?")) return;
         
         updateBookingStatus(id, 'accepted');
-    }
+    };
 
-    function openReschedule(id) {
+    window.openReschedule = function(id) {
+        console.log("Opening reschedule modal for:", id);
         document.getElementById('rescheduleId').value = id;
         document.getElementById('rescheduleModal').classList.add('active');
-    }
+    };
 
     function closeReschedule() {
         document.getElementById('rescheduleModal').classList.remove('active');
