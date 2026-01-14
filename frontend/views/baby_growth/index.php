@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__, 4) . '/backend/config/database.php';
 /**
- * PSM System - Baby Growth Tracker (Separated Charts)
+ * PSM System - Baby Growth Tracker (3 Separate Charts: Weight, Height, Head Circ)
  */
 
 $page_title = "Baby Growth Tracker - PSM System";
@@ -59,7 +59,8 @@ while($row = mysqli_fetch_assoc($result)) {
     $full_records[] = [
         'date' => $row['recorded_at'],
         'weight' => (float)$row['weight_kg'],
-        'height' => (float)$row['height_cm']
+        'height' => (float)$row['height_cm'],
+        'head' => (float)$row['head_circ_cm']
     ];
 }
 
@@ -202,7 +203,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
                         <h5 class="mb-0 fw-bold" style="color: #9575CD;">
                             <i class="fas fa-weight me-2"></i> Weight Chart (kg)
                         </h5>
-                        <small class="text-muted">Standards: WHO Child Growth</small>
+                        <small class="text-muted">Standards: WHO Reference</small>
                     </div>
                     <div style="height: 350px;">
                         <canvas id="weightChart"></canvas>
@@ -213,16 +214,33 @@ require_once BASE_PATH . '/backend/includes/header.php';
 
         <!-- NEW: CHART 2 (HEIGHT) -->
         <div class="col-12">
-            <div class="card border-0 shadow-sm" style="border-radius: 20px;">
+            <div class="card border-0 shadow-sm mb-4" style="border-radius: 20px;">
                 <div class="card-body p-4">
                     <div class="card-header-custom d-flex justify-content-between">
                         <h5 class="mb-0 fw-bold" style="color: #26C6DA;">
                             <i class="fas fa-ruler-vertical me-2"></i> Height Chart (cm)
                         </h5>
-                        <small class="text-muted">Standards: WHO Child Growth</small>
+                        <small class="text-muted">Standards: WHO Reference</small>
                     </div>
                     <div style="height: 350px;">
                         <canvas id="heightChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- NEW: CHART 3 (HEAD CIRCUMFERENCE) -->
+         <div class="col-12">
+            <div class="card border-0 shadow-sm" style="border-radius: 20px;">
+                <div class="card-body p-4">
+                    <div class="card-header-custom d-flex justify-content-between">
+                        <h5 class="mb-0 fw-bold" style="color: #F06292;">
+                            <i class="fas fa-smile me-2"></i> Head Circumference (cm)
+                        </h5>
+                        <small class="text-muted">Standards: WHO Reference</small>
+                    </div>
+                    <div style="height: 350px;">
+                        <canvas id="headChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -238,16 +256,19 @@ require_once BASE_PATH . '/backend/includes/header.php';
     const WHO_DATA = {
         boy: {
             weight: [3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 7.9, 8.3, 8.6, 8.9, 9.2, 9.4, 9.6],
-            height: [49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6, 69.2, 70.6, 72.0, 73.3, 74.5, 75.7]
+            height: [49.9, 54.7, 58.4, 61.4, 63.9, 65.9, 67.6, 69.2, 70.6, 72.0, 73.3, 74.5, 75.7],
+            head: [34.5, 36.7, 38.5, 40.5, 41.6, 42.6, 43.3, 44.0, 44.5, 45.0, 45.4, 45.8, 46.1]
         },
         girl: {
             weight: [3.2, 4.2, 5.1, 5.8, 6.4, 6.9, 7.3, 7.6, 7.9, 8.2, 8.5, 8.7, 8.9],
-            height: [49.1, 53.7, 57.1, 59.8, 62.1, 64.0, 65.7, 67.3, 68.7, 70.1, 71.5, 72.8, 74.0]
+            height: [49.1, 53.7, 57.1, 59.8, 62.1, 64.0, 65.7, 67.3, 68.7, 70.1, 71.5, 72.8, 74.0],
+            head: [33.9, 35.9, 37.7, 39.5, 40.6, 41.5, 42.2, 42.9, 43.4, 43.8, 44.3, 44.6, 44.9]
         }
     };
 
     let weightChartInstance = null;
     let heightChartInstance = null;
+    let headChartInstance = null;
 
     // Load Settings
     const savedDob = localStorage.getItem('psm_baby_dob');
@@ -266,16 +287,20 @@ require_once BASE_PATH . '/backend/includes/header.php';
         const labels = [];
         const weightData = [];
         const heightData = [];
+        const headData = [];
+        
         const whoWeightData = [];
         const whoHeightData = [];
+        const whoHeadData = [];
         
         userRecords.forEach(record => {
-            if(record.weight > 0 || record.height > 0) {
+            if(record.weight > 0 || record.height > 0 || record.head > 0) {
                 const d = new Date(record.date);
                 labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
                 
                 weightData.push(record.weight > 0 ? record.weight : null);
                 heightData.push(record.height > 0 ? record.height : null);
+                headData.push(record.head > 0 ? record.head : null);
                 
                 if (dobStr) {
                     const dob = new Date(dobStr);
@@ -289,94 +314,61 @@ require_once BASE_PATH . '/backend/includes/header.php';
                     
                     whoWeightData.push(WHO_DATA[gender].weight[monthsDiff]);
                     whoHeightData.push(WHO_DATA[gender].height[monthsDiff]);
+                    whoHeadData.push(WHO_DATA[gender].head[monthsDiff]);
                 } else {
                     whoWeightData.push(null);
                     whoHeightData.push(null);
+                    whoHeadData.push(null);
                 }
             }
         });
 
-        // --- RENDER WEIGHT CHART ---
-        const wCtx = document.getElementById('weightChart').getContext('2d');
-        if (weightChartInstance) weightChartInstance.destroy();
+        // HELPER TO CREATE CHART
+        const createChart = (ctxId, instance, label, data, whoData, color, title) => {
+            const ctx = document.getElementById(ctxId).getContext('2d');
+            if (instance) instance.destroy();
 
-        weightChartInstance = new Chart(wCtx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Baby Weight (kg)',
-                        data: weightData,
-                        borderColor: '#9575CD',
-                        backgroundColor: 'rgba(149, 117, 205, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    },
-                    {
-                        label: `WHO ${gender === 'boy' ? 'Boy' : 'Girl'} Standard`,
-                        data: whoWeightData,
-                        borderColor: '#B0BEC5',
-                        borderDash: [5, 5],
-                        borderWidth: 2,
-                        fill: false,
-                        tension: 0.4,
-                        pointRadius: 0
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { 
-                        beginAtZero: false,
-                        title: { display: true, text: 'Weight (kg)' }
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: label,
+                            data: data,
+                            borderColor: color,
+                            backgroundColor: color + '1A', // 10% opacity hex
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: `WHO ${gender === 'boy' ? 'Boy' : 'Girl'} Standard`,
+                            data: whoData,
+                            borderColor: '#B0BEC5',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: false,
+                            title: { display: true, text: title }
+                        }
                     }
                 }
-            }
-        });
+            });
+        };
 
-        // --- RENDER HEIGHT CHART ---
-        const hCtx = document.getElementById('heightChart').getContext('2d');
-        if (heightChartInstance) heightChartInstance.destroy();
-
-        heightChartInstance = new Chart(hCtx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Baby Height (cm)',
-                        data: heightData,
-                        borderColor: '#26C6DA',
-                        backgroundColor: 'rgba(38, 198, 218, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    },
-                    {
-                        label: `WHO ${gender === 'boy' ? 'Boy' : 'Girl'} Standard`,
-                        data: whoHeightData,
-                        borderColor: '#90A4AE',
-                        borderDash: [5, 5],
-                        borderWidth: 2,
-                        fill: false,
-                        tension: 0.4,
-                        pointRadius: 0
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: { 
-                        beginAtZero: false,
-                        title: { display: true, text: 'Height (cm)' }
-                    }
-                }
-            }
-        });
+        weightChartInstance = createChart('weightChart', weightChartInstance, 'Weight (kg)', weightData, whoWeightData, '#9575CD', 'Weight (kg)');
+        heightChartInstance = createChart('heightChart', heightChartInstance, 'Height (cm)', heightData, whoHeightData, '#26C6DA', 'Height (cm)');
+        headChartInstance = createChart('headChart', headChartInstance, 'Head Circ. (cm)', headData, whoHeadData, '#F06292', 'Head Circ. (cm)');
     }
 
     document.addEventListener('DOMContentLoaded', updateCharts);
