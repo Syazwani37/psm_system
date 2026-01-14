@@ -413,19 +413,19 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo BASE_UR
         <div class="col-lg-4">
             <div class="chart-card">
                 <h6><i class="fas fa-heartbeat me-2"></i>Patient Risk Distribution</h6>
-                <canvas id="riskDistChart" height="180"></canvas>
+                <canvas id="riskDistChart" height="120"></canvas>
             </div>
         </div>
         <div class="col-lg-4">
             <div class="chart-card">
                 <h6><i class="fas fa-calendar-check me-2"></i>My Consultations</h6>
-                <canvas id="myConsultChart" height="180"></canvas>
+                <canvas id="myConsultChart" height="120"></canvas>
             </div>
         </div>
         <div class="col-lg-4">
             <div class="chart-card">
                 <h6><i class="fas fa-user-plus me-2"></i>New Mothers (7 Days)</h6>
-                <canvas id="newPatientsChart" height="180"></canvas>
+                <canvas id="newPatientsChart" height="120"></canvas>
             </div>
         </div>
     </div>
