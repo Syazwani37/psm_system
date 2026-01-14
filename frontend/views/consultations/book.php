@@ -179,25 +179,30 @@ require_once BASE_PATH . '/backend/includes/header.php';
         z-index: 2000;
     }
 
-    .toast-custom {
-        background: #333 !important;
-        color: white !important;
-        padding: 1.5rem 2rem !important; /* Larger padding */
-        border-radius: 12px !important;
-        margin-top: 10px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5) !important;
+    /* Toast Notification Frame */
+    .toast-frame {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 1.5rem 2rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         display: flex;
         align-items: center;
         gap: 1rem;
         animation: fadeInUp 0.3s ease-out;
         font-weight: 600;
-        border: 3px solid rgba(255,255,255,0.8) !important; /* Thicker White Border */
-        z-index: 9999 !important;
-        min-width: 300px;
+        border: 4px solid white; /* Thick Frame */
+        z-index: 10000; /* Super high z-index */
+        min-width: 320px;
         font-size: 1.1rem;
+        text-align: left;
     }
-    .toast-custom.success { background: #43A047 !important; border: 3px solid #1B5E20 !important; }
-    .toast-custom.error { background: #E53935 !important; border: 3px solid #B71C1C !important; }
+    .toast-frame.success { background: #43A047; border-color: #A5D6A7; }
+    .toast-frame.error { background: #D32F2F; border-color: #FFCDD2; }
     
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(20px); }
@@ -351,25 +356,33 @@ require_once BASE_PATH . '/backend/includes/header.php';
     }
 
     function showNotification(message, type = 'success') {
-        const container = document.getElementById('toast-container');
-        const toast = document.createElement('div');
-        toast.className = `toast-custom ${type}`;
+        // Remove existing toasts first
+        const existing = document.querySelectorAll('.toast-frame');
+        existing.forEach(t => t.remove());
 
-        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
-        toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
-        container.appendChild(toast);
+        // Create new
+        const toast = document.createElement('div');
+        toast.className = `toast-frame ${type}`;
+
+        const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+        toast.innerHTML = `<i class="fas ${icon}" style="font-size: 1.4em;"></i> <span>${message}</span>`;
+        
+        document.body.appendChild(toast); // Append directly to body to skip container issues
 
         setTimeout(() => {
             toast.style.animation = 'fadeOutDown 0.3s ease-in forwards';
             setTimeout(() => {
-                toast.remove();
+                if(toast.parentNode) toast.parentNode.removeChild(toast);
             }, 300);
-        }, 3000);
+        }, 4000);
     }
 </script>
 
 <?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
-/ /  
- F O R C E  
- U P D A T E  
+/ / 
+ 
+ F O R C E 
+ 
+ U P D A T E 
+ 
  
