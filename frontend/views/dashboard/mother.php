@@ -429,6 +429,22 @@ function loadNotifications() {
 function displayNotifications(notifications) {
     const notificationsList = document.getElementById('notificationsList');
 
+    // Update Badge Count
+    const unreadCount = notifications.filter(n => n.is_read == 0).length;
+    const bellBtn = document.getElementById('notificationBell');
+    let badge = bellBtn.querySelector('.badge');
+
+    if (unreadCount > 0) {
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger';
+            bellBtn.appendChild(badge);
+        }
+        badge.textContent = unreadCount;
+    } else {
+        if (badge) badge.remove();
+    }
+
     if (notifications.length === 0) {
         notificationsList.innerHTML = '<div class="text-center py-2 text-muted">No notifications</div>';
         return;
