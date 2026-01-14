@@ -141,6 +141,39 @@ $last_user_date = mysqli_fetch_assoc(mysqli_query($conn, "SELECT MAX(created_at)
 
 $txt_recovery_update = $last_log_date ? "Last entry: " . date('M d, h:i A', strtotime($last_log_date)) : "No data yet";
 $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtotime($last_user_date)) : "No activity";
+
+// --------------------------------------------------------------------------
+// 6. Fetch Chart Data: User Registrations (Last 7 Days)
+// --------------------------------------------------------------------------
+$chart_user_labels = [];
+$chart_user_data = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $chart_user_labels[] = date('M d', strtotime($date));
+    $count = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM users WHERE DATE(created_at) = '$date'"))['c'] ?? 0;
+    $chart_user_data[] = (int)$count;
+}
+
+// --------------------------------------------------------------------------
+// 7. Fetch Chart Data: Symptom Logs by Risk Level
+// --------------------------------------------------------------------------
+$chart_risk_labels = ['Low', 'Medium', 'High'];
+$chart_risk_data = [
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE risk_level = 'low'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE risk_level = 'medium'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE risk_level = 'high'"))['c'] ?? 0,
+];
+
+// --------------------------------------------------------------------------
+// 8. Fetch Chart Data: Consultations by Status
+// --------------------------------------------------------------------------
+$chart_consult_labels = ['Pending', 'Accepted', 'Completed', 'Rejected'];
+$chart_consult_data = [
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE status = 'pending'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE status = 'accepted'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE status = 'completed'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM consultations WHERE status = 'rejected'"))['c'] ?? 0,
+];
 ?>
 
 <style>
@@ -225,6 +258,19 @@ $txt_user_update = $last_user_date ? "Last signup: " . date('M d, h:i A', strtot
     .report-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .chart-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        margin-bottom: 1.5rem;
+    }
+    .chart-card h6 {
+        color: #4A148C;
+        margin-bottom: 1rem;
+        font-weight: 600;
     }
 </style>
 
@@ -348,6 +394,31 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats[
                 <div class="stat-number"><?php
 require_once dirname(__FILE__, 4) . '/backend/config/database.php'; echo $stats['pending_consultations']; ?></div>
                 <div class="text-muted">Pending Consultations</div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="chart-card">
+                <h6><i class="fas fa-chart-line me-2"></i>User Registrations (Last 7 Days)</h6>
+                <canvas id="userRegistrationChart" height="200"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="chart-card">
+                <h6><i class="fas fa-heartbeat me-2"></i>Symptom Logs by Risk Level</h6>
+                <canvas id="riskLevelChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consultations Chart -->
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            <div class="chart-card">
+                <h6><i class="fas fa-calendar-check me-2"></i>Consultations by Status</h6>
+                <canvas id="consultStatusChart" height="100"></canvas>
             </div>
         </div>
     </div>
@@ -578,6 +649,86 @@ function markAllNotificationsAsRead() {
 function updateNotificationCount() {
     // Reload the page to update the notification count in the header
     location.reload();
+}
+
+// --------------------------------------------------------------------------
+// Chart.js Initialization
+// --------------------------------------------------------------------------
+// User Registration Chart (Line)
+const userRegCtx = document.getElementById('userRegistrationChart');
+if (userRegCtx) {
+    new Chart(userRegCtx, {
+        type: 'line',
+        data: {
+            labels: <?php echo json_encode($chart_user_labels); ?>,
+            datasets: [{
+                label: 'New Users',
+                data: <?php echo json_encode($chart_user_data); ?>,
+                borderColor: '#9C27B0',
+                backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#9C27B0',
+                pointRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+}
+
+// Risk Level Doughnut Chart
+const riskCtx = document.getElementById('riskLevelChart');
+if (riskCtx) {
+    new Chart(riskCtx, {
+        type: 'doughnut',
+        data: {
+            labels: <?php echo json_encode($chart_risk_labels); ?>,
+            datasets: [{
+                data: <?php echo json_encode($chart_risk_data); ?>,
+                backgroundColor: ['#4CAF50', '#FFC107', '#F44336'],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+}
+
+// Consultations Bar Chart
+const consultCtx = document.getElementById('consultStatusChart');
+if (consultCtx) {
+    new Chart(consultCtx, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($chart_consult_labels); ?>,
+            datasets: [{
+                label: 'Consultations',
+                data: <?php echo json_encode($chart_consult_data); ?>,
+                backgroundColor: ['#FFC107', '#4CAF50', '#2196F3', '#F44336'],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
 }
 </script>
 
