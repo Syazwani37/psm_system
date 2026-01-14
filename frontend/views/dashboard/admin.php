@@ -677,7 +677,7 @@ if (userRegCtx) {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 2 } }
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
             }
         }
     });
@@ -725,7 +725,7 @@ if (consultCtx) {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 2 } }
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
             }
         }
     });
