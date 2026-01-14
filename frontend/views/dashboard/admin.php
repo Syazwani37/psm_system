@@ -155,13 +155,13 @@ for ($i = 6; $i >= 0; $i--) {
 }
 
 // --------------------------------------------------------------------------
-// 7. Fetch Chart Data: Symptom Logs by Risk Level
+// 7. Fetch Chart Data: Symptom Logs by Risk Level (result_status column)
 // --------------------------------------------------------------------------
 $chart_risk_labels = ['Low', 'Medium', 'High'];
 $chart_risk_data = [
-    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE risk_level = 'low'"))['c'] ?? 0,
-    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE risk_level = 'medium'"))['c'] ?? 0,
-    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE risk_level = 'high'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE result_status = 'low'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE result_status = 'medium'"))['c'] ?? 0,
+    mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as c FROM symptom_logs WHERE result_status = 'high'"))['c'] ?? 0,
 ];
 
 // --------------------------------------------------------------------------
