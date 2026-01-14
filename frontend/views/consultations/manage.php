@@ -16,6 +16,8 @@ require_once BASE_PATH . '/backend/includes/header.php';
         max-width: 1000px;
         margin: 0 auto;
         padding: 2rem 1rem;
+        position: relative;
+        z-index: 2;
     }
 
     .booking-card {
@@ -119,7 +121,7 @@ require_once BASE_PATH . '/backend/includes/header.php';
 </style>
 
 <!-- Decoration -->
-<div class="blob blob-1" style="top: -100px; right: -100px; opacity: 0.3; background: #B2DFDB;"></div>
+<div class="blob blob-1" style="top: -100px; right: -100px; opacity: 0.3; background: #B2DFDB; position: absolute; z-index: 0;"></div>
 
 <div class="page-container">
     <div class="d-flex align-items-center mb-5">

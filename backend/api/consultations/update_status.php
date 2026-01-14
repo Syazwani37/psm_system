@@ -24,6 +24,7 @@ try {
     $consultation_id = (int)$data['consultation_id'];
     $status = mysqli_real_escape_string($conn, $data['status']);
     $professional_id = $_SESSION['user_id'];
+    $scheduled_at = null;
 
     // Initial SQL
     $sql = "UPDATE consultations SET status = '$status'";
