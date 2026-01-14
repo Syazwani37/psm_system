@@ -183,17 +183,18 @@ require_once BASE_PATH . '/backend/includes/header.php';
         background: #333;
         color: white;
         padding: 1rem 2rem;
-        border-radius: 50px;
+        border-radius: 12px;
         margin-top: 10px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
         display: flex;
         align-items: center;
         gap: 0.75rem;
         animation: fadeInUp 0.3s ease-out;
         font-weight: 500;
+        border: 2px solid rgba(255,255,255,0.2);
     }
-    .toast-custom.success { background: #43A047; }
-    .toast-custom.error { background: #E53935; }
+    .toast-custom.success { background: #43A047; border: 2px solid #2E7D32; }
+    .toast-custom.error { background: #E53935; border: 2px solid #B71C1C; }
     
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(20px); }
