@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
  * Frontend View: Recovery Module
  */
 
-$page_title = "Recovery Tracker - PSM System";
+$page_title = "Recovery Tracker";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
 requireLogin('mother');
 require_once BASE_PATH . '/backend/includes/header.php';
