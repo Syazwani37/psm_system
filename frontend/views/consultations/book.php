@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 4) . '/backend/config/database.php';
  * Frontend View: Consultations Module
  */
 
-$page_title = "Book Consultation - PSM System";
+$page_title = "Book Consultation";
 require_once BASE_PATH . '/backend/includes/auth_check.php';
 requireLogin('mother');
 require_once BASE_PATH . '/backend/includes/header.php';
@@ -379,10 +379,3 @@ require_once BASE_PATH . '/backend/includes/header.php';
 </script>
 
 <?php require_once BASE_PATH . '/backend/includes/footer.php'; ?>
-/ / 
- 
- F O R C E 
- 
- U P D A T E 
- 
- 
