@@ -289,91 +289,112 @@ require_once BASE_PATH . '/backend/includes/header.php';
         localStorage.setItem('psm_baby_dob', dobStr);
         localStorage.setItem('psm_baby_gender', gender);
         
-        const labels = [];
-        const weightData = [];
-        const heightData = [];
-        const headData = [];
-        
-        const whoWeightData = [];
-        const whoHeightData = [];
-        const whoHeadData = [];
+        // Prepare WHO Standard Datasets (0 to 12 months)
+        const whoLabels = Array.from({length: 13}, (_, i) => i); // [0, 1, ... 12]
+        const whoWeightData = WHO_DATA[gender].weight;
+        const whoHeightData = WHO_DATA[gender].height;
+        const whoHeadData = WHO_DATA[gender].head;
+
+        // Prepare User Data (Calculated as Age in Months)
+        const userWeightData = [];
+        const userHeightData = [];
+        const userHeadData = [];
         
         userRecords.forEach(record => {
-            if(record.weight > 0 || record.height > 0 || record.head > 0) {
-                const d = new Date(record.date);
-                labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-                
-                weightData.push(record.weight > 0 ? record.weight : null);
-                heightData.push(record.height > 0 ? record.height : null);
-                headData.push(record.head > 0 ? record.head : null);
-                
-                if (dobStr) {
-                    const dob = new Date(dobStr);
-                    const recordDate = new Date(record.date);
-                    let monthsDiff = (recordDate.getFullYear() - dob.getFullYear()) * 12;
-                    monthsDiff -= dob.getMonth();
-                    monthsDiff += recordDate.getMonth();
-                    
-                    if (monthsDiff < 0) monthsDiff = 0; 
-                    if (monthsDiff > 12) monthsDiff = 12;
-                    
-                    whoWeightData.push(WHO_DATA[gender].weight[monthsDiff]);
-                    whoHeightData.push(WHO_DATA[gender].height[monthsDiff]);
-                    whoHeadData.push(WHO_DATA[gender].head[monthsDiff]);
-                } else {
-                    whoWeightData.push(null);
-                    whoHeightData.push(null);
-                    whoHeadData.push(null);
+            if (!dobStr) return; // Cannot map without DOB
+            
+            const dob = new Date(dobStr);
+            const recordDate = new Date(record.date);
+            const oneMonthMs = 1000 * 60 * 60 * 24 * 30.4375; // Average month length
+            
+            let ageInMonths = (recordDate - dob) / oneMonthMs;
+            if (ageInMonths < 0) ageInMonths = 0;
+            // Allow plotting slightly beyond 12m, but focus is 0-12
+            
+            if (record.weight > 0) userWeightData.push({ x: ageInMonths, y: record.weight, date: record.date });
+            if (record.height > 0) userHeightData.push({ x: ageInMonths, y: record.height, date: record.date });
+            if (record.head > 0) userHeadData.push({ x: ageInMonths, y: record.head, date: record.date });
+        });
+
+        // Common Options
+        const commonOptions = (title) => ({
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'nearest',
+                intersect: false,
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                    title: { display: true, text: 'Age (Months)' },
+                    min: 0,
+                    max: 12,
+                    ticks: { stepSize: 1 }
+                },
+                y: {
+                    title: { display: true, text: title }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y;
+                            }
+                            if (context.raw && context.raw.date) {
+                                label += ` (Recorded: ${context.raw.date})`;
+                            }
+                            return label;
+                        }
+                    }
                 }
             }
         });
 
-        // HELPER TO CREATE CHART
-        const createChart = (ctxId, instance, label, data, whoData, color, title) => {
+        // Helper to Create Chart
+        const createChart = (ctxId, instance, label, userData, whoData, color, title) => {
             const ctx = document.getElementById(ctxId).getContext('2d');
             if (instance) instance.destroy();
 
             return new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: labels,
+                    labels: whoLabels, // Acts as the basis for the line charts
                     datasets: [
                         {
                             label: label,
-                            data: data,
+                            data: userData, // Array of {x, y} objects
                             borderColor: color,
-                            backgroundColor: color + '1A', // 10% opacity hex
-                            fill: true,
-                            tension: 0.4
+                            backgroundColor: color,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            showLine: false, // User data is points only
                         },
                         {
                             label: `WHO ${gender === 'boy' ? 'Boy' : 'Girl'} Standard`,
-                            data: whoData,
+                            data: whoData.map((val, idx) => ({x: idx, y: val})), // Map to x,y for consistency
                             borderColor: '#B0BEC5',
                             borderDash: [5, 5],
                             borderWidth: 2,
+                            pointRadius: 0,
                             fill: false,
-                            tension: 0.4,
-                            pointRadius: 0
+                            tension: 0.4
                         }
                     ]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { 
-                            beginAtZero: false,
-                            title: { display: true, text: title }
-                        }
-                    }
-                }
+                options: commonOptions(title)
             });
         };
 
-        weightChartInstance = createChart('weightChart', weightChartInstance, 'Weight (kg)', weightData, whoWeightData, '#9575CD', 'Weight (kg)');
-        heightChartInstance = createChart('heightChart', heightChartInstance, 'Height (cm)', heightData, whoHeightData, '#26C6DA', 'Height (cm)');
-        headChartInstance = createChart('headChart', headChartInstance, 'Head Circ. (cm)', headData, whoHeadData, '#F06292', 'Head Circ. (cm)');
+        weightChartInstance = createChart('weightChart', weightChartInstance, 'Weight (kg)', userWeightData, whoWeightData, '#9575CD', 'Weight (kg)');
+        heightChartInstance = createChart('heightChart', heightChartInstance, 'Height (cm)', userHeightData, whoHeightData, '#26C6DA', 'Height (cm)');
+        headChartInstance = createChart('headChart', headChartInstance, 'Head Circ. (cm)', userHeadData, whoHeadData, '#F06292', 'Head Circ. (cm)');
     }
 
     document.addEventListener('DOMContentLoaded', updateCharts);
